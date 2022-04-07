@@ -47,12 +47,33 @@ public class RLE {
 		RasterImage image = new RasterImage(width, height);
 
 		// TODO: read remaining RLE data from DataInputStream and reconstruct image
-		for(int x = 0; in.available()>0; x++) {
-			int index = in.readByte() & 0xff;
-			int lauflaenge = in.readByte() & 0xff;
-			//if(lauflaenge> 255)lauflaenge = 255;
-			for (int i = 0; i <= lauflaenge; i++) {
+
+		int x = 0;										//pixel count
+		while(in.available()>0){						//solange wie datastream available
+
+			int index = in.readByte() & 0xff;			//wird farbe und
+			int lauflaenge = in.readByte() & 0xff;		//lauflänge gezogen
+
+			if(lauflaenge> 255){						//kommt quasi nie vor
+
+				int overhead = lauflaenge - 255;
+				int l = 255;
+				for (int i = 0; i <= l; i++) {
 					image.argb[x] = colors[index];
+				}
+				for (int i = 0; i <= overhead; i++) {
+					image.argb[x] = colors[index];
+				}
+
+			}
+			else {
+				//lauflänge +1, da lauflänge 0 1 bedeutet
+				lauflaenge++;
+				//für die definierte lauflänge wird der pixel in der definierten farbe gefärbt und pixelcount +1
+				for (int i = 0; i < lauflaenge; i++) {
+					image.argb[x] = colors[index];
+					x++;
+				}
 			}
 		}
 
