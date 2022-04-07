@@ -35,24 +35,25 @@ public class RLE {
 		height = in.readInt();
 		numberOfColors = in.readInt();
 
-		int[] colors = new int[numberOfColors];
+		int[] colors = new int[numberOfColors];  //color array
 
-		for(int i=0; i<=numberOfColors; i++){
+		for(int i=0; i<numberOfColors; i++){
 			argb = in.readInt();
 			colors[i] = argb;
 		}
 
-		System.out.println(width + " " + height);
+
 		// create RasterImage to be returned
 		RasterImage image = new RasterImage(width, height);
 
 		// TODO: read remaining RLE data from DataInputStream and reconstruct image
-
-		int index = in.readByte() & 0xff;
-		int lauflaenge = in.readByte() & 0xff;
-
-		for(int i = 0; i <= lauflaenge; i++){
-			
+		for(int x = 0; in.available()>0; x++) {
+			int index = in.readByte() & 0xff;
+			int lauflaenge = in.readByte() & 0xff;
+			//if(lauflaenge> 255)lauflaenge = 255;
+			for (int i = 0; i <= lauflaenge; i++) {
+					image.argb[x] = colors[index];
+			}
 		}
 
 		return image;
