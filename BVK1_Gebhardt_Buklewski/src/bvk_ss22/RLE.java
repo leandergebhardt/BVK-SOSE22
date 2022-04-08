@@ -20,47 +20,66 @@ public class RLE {
 		// TODO: write RLE data to DataOutputStream
 		int width = image.width;
 		int height = image.height;
-		int lauflaenge = 0;
 		int numberOfColors = 0;
-		ArrayList<Integer> colors = new ArrayList<Integer>();
+		int lauflaenge = 0;
 
 		out.writeInt(width);
 		out.writeInt(height);
 
-		// iterate over image get all colors & color-pallette
+		// LOOP 1
+		// iterate over image get number of colors
 		int l = 0;
-		for (int x=0; x < image.width; x++) {
-			if(image.argb[x-l] != image.argb[x]) { // check if differ to last known color
-				colors.add(image.argb[x]);
-				numberOfColors++;
-			}
-			else {
-				l++;
-			}
-			for	(int y=0; y < image.height; y++) {
+		ArrayList<Integer> colorsValue = new ArrayList<Integer>();
+		for (int x=0; x < image.argb.length; x++) {
 
-			}
+				int argbLastColor = image.argb[x-l];
+				int argbCurrentColor = image.argb[x];
+
+				if(argbLastColor != argbCurrentColor) { // check if difference
+					for (int i = 0; i < colorsValue.size(); i++) {
+						if(argbCurrentColor != colorsValue.get(i)){
+							colorsValue.add(argbCurrentColor);
+							// break;
+						}
+					}
+					numberOfColors++;
+				}
+				else { // if no difference rise lauflänge
+					l++;
+				}
 		}
 
+		System.out.println(numberOfColors + " Colors in this image");
+
 		out.writeInt(numberOfColors);
+		for (int index = 0; index < colorsValue.size(); index++) {
+			out.writeInt(colorsValue.get(index)); // write all Colors in Stream
+		}
+		int[] colors = new int[numberOfColors];
 
+		// LOOP 2
 		// iterate over image ReadOut Values
-		int currentColor = 0;
+		int currentColor;
+		int lastColor;
+		int colorIndex = 0;
+		for (int x=0; x < image.argb.length; x++) {
 
-		for (int x=0; x < image.width; x++) {
-			currentColor = image.argb[x]; // get current color from position
-			if(image.argb[x-lauflaenge] != currentColor) { // check if differ to last known color
-				colors.add(currentColor);
-				numberOfColors++;
-				out.writeByte(image.argb[x-lauflaenge]);
-				out.writeByte(lauflaenge -1);
-			}
-			else {
-				lauflaenge++;
-			}
-			for	(int y=0; y < image.height; y++) {
-				
-			}
+				currentColor = image.argb[x]; // get current color from position
+				lastColor = image.argb[x - lauflaenge];
+
+				if( lastColor != currentColor) { // check if differ to last known color
+					for (int i = 0; i < colors.length; i++) {
+						if(colors[i] != currentColor){
+							colors[i] = currentColor;
+						}
+					}
+					out.writeByte(colorIndex); // write colorIndex to Stream
+					out.writeByte(lauflaenge -1); // write lauflänge to Stream
+					colorIndex++;
+				}
+				else {
+					lauflaenge++;
+				}
 		}
 
 	}
