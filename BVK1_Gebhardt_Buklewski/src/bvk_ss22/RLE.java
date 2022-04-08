@@ -11,26 +11,87 @@ import com.sun.org.apache.bcel.internal.generic.NEWARRAY;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class RLE {
 	
 	public static void encodeImage(RasterImage image, DataOutputStream out) throws IOException {
 		
 		// TODO: write RLE data to DataOutputStream
+		int width = image.width;
+		int height = image.height;
+		int numberOfColors = 0;
+		int lauflaenge = 0;
+
+		out.writeInt(width);
+		out.writeInt(height);
+
+		// LOOP 1
+		// iterate over image get number of colors
+		int l = 0;
+		ArrayList<Integer> colorsValue = new ArrayList<Integer>();
+		for (int x=0; x < image.argb.length; x++) {
+
+				int argbLastColor = image.argb[x-l];
+				int argbCurrentColor = image.argb[x];
+
+				if(argbLastColor != argbCurrentColor) { // check if difference
+					for (int i = 0; i < colorsValue.size(); i++) {
+						if(argbCurrentColor != colorsValue.get(i)){
+							colorsValue.add(argbCurrentColor);
+							// break;
+						}
+					}
+					numberOfColors++;
+				}
+				else { // if no difference rise lauflänge
+					l++;
+				}
+		}
+
+		System.out.println(numberOfColors + " Colors in this image");
+
+		out.writeInt(numberOfColors);
+		for (int index = 0; index < colorsValue.size(); index++) {
+			out.writeInt(colorsValue.get(index)); // write all Colors in Stream
+		}
+		int[] colors = new int[numberOfColors];
+
+		// LOOP 2
+		// iterate over image ReadOut Values
+		int currentColor;
+		int lastColor;
+		int colorIndex = 0;
+		for (int x=0; x < image.argb.length; x++) {
+
+				currentColor = image.argb[x]; // get current color from position
+				lastColor = image.argb[x - lauflaenge];
+
+				if( lastColor != currentColor) { // check if differ to last known color
+					for (int i = 0; i < colors.length; i++) {
+						if(colors[i] != currentColor){
+							colors[i] = currentColor;
+						}
+					}
+					out.writeByte(colorIndex); // write colorIndex to Stream
+					out.writeByte(lauflaenge -1); // write lauflänge to Stream
+					colorIndex++;
+				}
+				else {
+					lauflaenge++;
+				}
+		}
 
 	}
 
 	public static RasterImage decodeImage(DataInputStream in) throws IOException {
-		int width = 10;
-		int height = 10;
-
+		int width;
+		int height;
 		int numberOfColors;
 		int argb;
 
 
-		// TODO: read width and height from DataInputStream
-//		width = ...;
-//		height = ...;
+		// read width and height from DataInputStream
 		width = in.readInt();
 		height = in.readInt();
 		numberOfColors = in.readInt();
