@@ -11,26 +11,68 @@ import com.sun.org.apache.bcel.internal.generic.NEWARRAY;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class RLE {
 	
 	public static void encodeImage(RasterImage image, DataOutputStream out) throws IOException {
 		
 		// TODO: write RLE data to DataOutputStream
+		int width = image.width;
+		int height = image.height;
+		int lauflaenge = 0;
+		int numberOfColors = 0;
+		ArrayList<Integer> colors = new ArrayList<Integer>();
+
+		out.writeInt(width);
+		out.writeInt(height);
+
+		// iterate over image get all colors & color-pallette
+		int l = 0;
+		for (int x=0; x < image.width; x++) {
+			if(image.argb[x-l] != image.argb[x]) { // check if differ to last known color
+				colors.add(image.argb[x]);
+				numberOfColors++;
+			}
+			else {
+				l++;
+			}
+			for	(int y=0; y < image.height; y++) {
+
+			}
+		}
+
+		out.writeInt(numberOfColors);
+
+		// iterate over image ReadOut Values
+		int currentColor = 0;
+
+		for (int x=0; x < image.width; x++) {
+			currentColor = image.argb[x]; // get current color from position
+			if(image.argb[x-lauflaenge] != currentColor) { // check if differ to last known color
+				colors.add(currentColor);
+				numberOfColors++;
+				out.writeByte(image.argb[x-lauflaenge]);
+				out.writeByte(lauflaenge -1);
+			}
+			else {
+				lauflaenge++;
+			}
+			for	(int y=0; y < image.height; y++) {
+				
+			}
+		}
 
 	}
 
 	public static RasterImage decodeImage(DataInputStream in) throws IOException {
-		int width = 10;
-		int height = 10;
-
+		int width;
+		int height;
 		int numberOfColors;
 		int argb;
 
 
-		// TODO: read width and height from DataInputStream
-//		width = ...;
-//		height = ...;
+		// read width and height from DataInputStream
 		width = in.readInt();
 		height = in.readInt();
 		numberOfColors = in.readInt();
