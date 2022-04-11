@@ -35,14 +35,18 @@ public class RLE {
 				int argbLastColor = image.argb[x-l];
 				int argbCurrentColor = image.argb[x];
 
+				if(colorsValue.size() == 0){
+					colorsValue.add(argbCurrentColor);
+				}
+
 				if(argbLastColor != argbCurrentColor) { // check if difference
 					for (int i = 0; i < colorsValue.size(); i++) {
 						if(argbCurrentColor != colorsValue.get(i)){
 							colorsValue.add(argbCurrentColor);
+							numberOfColors++;
 							// break;
 						}
 					}
-					numberOfColors++;
 				}
 				else { // if no difference rise lauflänge
 					l++;
@@ -51,7 +55,8 @@ public class RLE {
 
 		System.out.println(numberOfColors + " Colors in this image");
 
-		out.writeInt(numberOfColors);
+		out.writeInt(numberOfColors); // write number of colors in Stream
+
 		for (int index = 0; index < colorsValue.size(); index++) {
 			out.writeInt(colorsValue.get(index)); // write all Colors in Stream
 		}
