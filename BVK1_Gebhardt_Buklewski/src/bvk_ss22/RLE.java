@@ -27,7 +27,7 @@ public class RLE {
 		out.writeInt(height);
 
 		// LOOP 1
-		// iterate over image get number of colors
+		// iterate over image get number of colors & save color values
 		int l = 0;
 		ArrayList<Integer> colorsValue = new ArrayList<Integer>();
 		for (int x=0; x < image.argb.length; x++) {
@@ -41,7 +41,7 @@ public class RLE {
 
 				if(argbLastColor != argbCurrentColor) { // check if difference
 					for (int i = 0; i < colorsValue.size(); i++) {
-						if(argbCurrentColor != colorsValue.get(i)){
+						if(argbCurrentColor != colorsValue.get(i)){ // check if color is already saved
 							colorsValue.add(argbCurrentColor);
 							numberOfColors++;
 							// break;
