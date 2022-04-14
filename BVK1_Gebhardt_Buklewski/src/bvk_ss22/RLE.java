@@ -28,30 +28,19 @@ public class RLE {
 
 		// LOOP 1
 		// iterate over image get number of colors & save color values
-		int l = 0;
 		ArrayList<Integer> colorsValue = new ArrayList<Integer>();
 		for (int x=0; x < image.argb.length; x++) {
 
-				int argbLastColor = image.argb[x-l];
+
 				int argbCurrentColor = image.argb[x];
 
-				if(colorsValue.size() == 0){
+				if(!colorsValue.contains(argbCurrentColor)){
 					colorsValue.add(argbCurrentColor);
 				}
 
-				if(argbLastColor != argbCurrentColor) { // check if difference
-					for (int i = 0; i < colorsValue.size(); i++) {
-						if(argbCurrentColor != colorsValue.get(i)){ // check if color is already saved
-							colorsValue.add(argbCurrentColor);
-							numberOfColors++;
-							// break;
-						}
-					}
-				}
-				else { // if no difference rise lauflänge
-					l++;
-				}
 		}
+
+		numberOfColors = colorsValue.size();
 
 		System.out.println(numberOfColors + " Colors in this image");
 
@@ -59,13 +48,43 @@ public class RLE {
 
 		for (int index = 0; index < colorsValue.size(); index++) {
 			out.writeInt(colorsValue.get(index)); // write all Colors in Stream
+			System.out.println("color: " + colorsValue.get(index));
 		}
-		int[] colors = new int[numberOfColors];
+		//int[] colors = new int[numberOfColors];
 
 		// LOOP 2
+
 		// iterate over image ReadOut Values
+
+
+
 		int currentColor;
-		int lastColor;
+		int lastColor = 0;
+		int l = 0;
+
+
+		for(int x = 0; x< image.argb.length; x++){
+			currentColor = image.argb[x];
+
+			if(lastColor==0){
+				out.writeByte(colorsValue.indexOf(lastColor));
+				out.writeByte(l);
+				lastColor=currentColor;
+			}
+
+			if(currentColor != lastColor){
+
+				out.writeByte(colorsValue.indexOf(lastColor));
+				System.out.println("index: " + colorsValue.indexOf(lastColor));
+				out.writeByte(l);
+				System.out.println(l);
+				l=0;
+			}
+			l++;
+			lastColor=currentColor;
+
+		}
+		/**
 		int colorIndex = 0;
 		for (int x=0; x < image.argb.length; x++) {
 
@@ -86,6 +105,7 @@ public class RLE {
 					lauflaenge++;
 				}
 		}
+		 **/
 
 	}
 
@@ -111,6 +131,9 @@ public class RLE {
 
 		// create RasterImage to be returned
 		RasterImage image = new RasterImage(width, height);
+		for(int i = 0; i< colors.length;i++){
+			System.out.println(colors[i]);
+		}
 
 		// TODO: read remaining RLE data from DataInputStream and reconstruct image
 
