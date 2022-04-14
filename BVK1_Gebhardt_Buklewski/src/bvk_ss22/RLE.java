@@ -12,6 +12,9 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 
 public class RLE {
 	
@@ -20,7 +23,7 @@ public class RLE {
 		// TODO: write RLE data to DataOutputStream
 		int width = image.width;
 		int height = image.height;
-		int numberOfColors = 0;
+		// int numberOfColors = 0;
 		int lauflaenge = 0;
 
 		out.writeInt(width);
@@ -29,58 +32,93 @@ public class RLE {
 		// LOOP 1
 		// iterate over image get number of colors & save color values
 		int l = 0;
-		ArrayList<Integer> colorsValue = new ArrayList<Integer>();
+		HashSet<Integer> colorValues = new HashSet<Integer>();
+
+		// 1. set
+		// iterate set create map
+		// 2. map key = Farbe, value = index
+
+		System.out.println("ARGB size: " + image.argb.length);
 		for (int x=0; x < image.argb.length; x++) {
 
-				int argbLastColor = image.argb[x-l];
+				// int argbLastColor = image.argb[x-l];
 				int argbCurrentColor = image.argb[x];
 
-				if(colorsValue.size() == 0){
-					colorsValue.add(argbCurrentColor);
+			/*	if(colorValues.size() == 0){
+					colorValues.add(argbCurrentColor);
+				}
+			 */
+
+				if(!colorValues.contains(argbCurrentColor)){
+					colorValues.add(argbCurrentColor);
 				}
 
+				/*
 				if(argbLastColor != argbCurrentColor) { // check if difference
-					for (int i = 0; i < colorsValue.size(); i++) {
-						if(argbCurrentColor != colorsValue.get(i)){ // check if color is already saved
-							colorsValue.add(argbCurrentColor);
+					for (int i = 0; i < colorValues.size(); i++) {
+						if(argbCurrentColor != colorValues.get(i)){ // check if color is already saved
+							colorValues.add(argbCurrentColor);
 							numberOfColors++;
 							// break;
 						}
 					}
 				}
+
 				else { // if no difference rise lauflänge
 					l++;
 				}
+				 */
 		}
 
-		System.out.println(numberOfColors + " Colors in this image");
+		System.out.println(colorValues.size() + " Colors in this image");
 
-		out.writeInt(numberOfColors); // write number of colors in Stream
+		out.writeInt(colorValues.size()); // write number of colors in Stream
 
-		for (int index = 0; index < colorsValue.size(); index++) {
-			out.writeInt(colorsValue.get(index)); // write all Colors in Stream
+		Iterator<Integer> iter = colorValues.iterator();
+		while (iter.hasNext()){
+			int next = iter.next();
+			System.out.println(next);
+
+			out.writeInt(next);
 		}
-		int[] colors = new int[numberOfColors];
+
+		/*
+		for (int index = 0; index < colorValues.size(); index++) {
+			out.writeInt(colorValues.get(index)); // write all Colors in Stream
+		}
+		 */
+
+		HashMap<Integer, Integer> colors = new HashMap<>();
+		// int[] colors = new int[numberOfColors]; // should be Map
 
 		// LOOP 2
 		// iterate over image ReadOut Values
 		int currentColor;
 		int lastColor;
-		int colorIndex = 0;
+		int colorIndex = 1;
+		colors.put(0, image.argb[0]);
+		System.out.println();
 		for (int x=0; x < image.argb.length; x++) {
 
 				currentColor = image.argb[x]; // get current color from position
 				lastColor = image.argb[x - lauflaenge];
 
-				if( lastColor != currentColor) { // check if differ to last known color
-					for (int i = 0; i < colors.length; i++) {
-						if(colors[i] != currentColor){
-							colors[i] = currentColor;
+				if (lastColor != currentColor) { // check if color switch
+					System.out.println("HashMap(" + colorIndex + ", " + currentColor + ") Lauflänge: " + lauflaenge);
+					if( colors.containsValue(currentColor)) {
+						for (int key : colors.keySet()) {
+							if(colors.get(key) == currentColor){
+								out.writeByte(key);
+								out.writeByte(lauflaenge);
+								break;
+							}
 						}
 					}
+					colors.put(colorIndex, currentColor);
 					out.writeByte(colorIndex); // write colorIndex to Stream
 					out.writeByte(lauflaenge -1); // write lauflänge to Stream
 					colorIndex++;
+					lauflaenge = 0;
 				}
 				else {
 					lauflaenge++;
