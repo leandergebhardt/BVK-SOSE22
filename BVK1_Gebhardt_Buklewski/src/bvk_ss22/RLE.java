@@ -40,9 +40,7 @@ public class RLE {
 		System.out.println("ARGB size: " + image.argb.length);
 		for (int x=0; x < image.argb.length; x++) {
 
-				// int argbLastColor = image.argb[x-l];
 				int argbCurrentColor = image.argb[x];
-
 				colorValues.add(argbCurrentColor);
 		}
 
@@ -99,10 +97,10 @@ public class RLE {
 		System.out.println("width: " + image.width);
 		System.out.println("height: " + image.height);
 		System.out.println("n: " + colorValues.size());
-		Iterator<Integer> iter2 = colorValues.iterator();
-		while (iter2.hasNext()){
+		int i = 0;
+		for (Iterator<Integer> iter2 = colorValues.iterator(); iter2.hasNext(); i++) {
 			int next = iter2.next();
-			System.out.println("color: " + next);
+			System.out.println("(n: " + i + " ,color: " + next + ")");
 		}
 		System.out.println("_________________________________________________________________________________________");
 
