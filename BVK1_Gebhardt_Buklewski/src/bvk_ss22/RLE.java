@@ -40,9 +40,13 @@ public class RLE {
 		System.out.println("ARGB size: " + image.argb.length);
 		for (int x=0; x < image.argb.length; x++) {
 
+				// int argbLastColor = image.argb[x-l];
 				int argbCurrentColor = image.argb[x];
+
 				colorValues.add(argbCurrentColor);
 		}
+
+		System.out.println(colorValues.size() + " Colors in this image");
 
 		out.writeInt(colorValues.size()); // write number of colors in Stream
 
@@ -69,54 +73,39 @@ public class RLE {
 				lastColor = image.argb[x - lauflaenge];
 
 				if (lastColor != currentColor) { // check if color switch
-					if(isNewColor(colors, lastColor)){
-						
+					if( colors.containsValue(lastColor)) { // color is already saved
+						for (int key : colors.keySet()) {
+							if(colors.get(key) == lastColor){
+								System.out.println("ouStream(" + key + ") Lauflänge: " + lauflaenge);
+								out.writeByte(key);
+								out.writeByte(lauflaenge);
+								lauflaenge = 0;
+							}
+						}
+					} else { // color is new
+						colors.put(colorIndex, lastColor);
+						System.out.println("outStream(" + colorIndex + ") Lauflänge: " + lauflaenge);
+						out.writeByte(colorIndex); // write colorIndex to Stream
+						out.writeByte(lauflaenge); // write lauflänge to Stream
+						colorIndex++;
+						lauflaenge = 0;
 					}
 				}
 				else {
 					lauflaenge++;
-					if(lauflaenge >= 255){
-						System.out.println("outStream(" + colorIndex + ") Lauflänge: " + lauflaenge);
-						out.writeByte(colorIndex);
-						out.writeByte(lauflaenge);
-						lauflaenge = 0;
-					}
 				}
 		}
 		System.out.println("_________________________________________________________________________________________");
 		System.out.println("width: " + image.width);
 		System.out.println("height: " + image.height);
 		System.out.println("n: " + colorValues.size());
-		//Iterator<Integer> iter2 = colorValues.iterator();
-		int i = 0;
-		for (Iterator<Integer> iter2 = colorValues.iterator(); iter2.hasNext(); i++) {
+		Iterator<Integer> iter2 = colorValues.iterator();
+		while (iter2.hasNext()){
 			int next = iter2.next();
-			System.out.println("(index: " + i + ", color: " + next + ")");
+			System.out.println("color: " + next);
 		}
 		System.out.println("_________________________________________________________________________________________");
 
-	}
-
-	public static boolean isNewColor(HashMap<Integer, Integer> colors, int lastColor) throws IOException {
-		if( colors.containsValue(lastColor)) { // color is already saved
-			for (int key : colors.keySet()) {
-				if(colors.get(key) == lastColor){
-					System.out.println("ouStream(" + key + ") Lauflänge: " + lauflaenge);
-					out.writeByte(key);
-					out.writeByte(lauflaenge);
-					lauflaenge = 0;
-					return false;
-				}
-			}
-		} else { // color is new
-			colors.put(colorIndex, lastColor);
-			System.out.println("outStream(" + colorIndex + ") Lauflänge: " + lauflaenge);
-			out.writeByte(colorIndex); // write colorIndex to Stream
-			out.writeByte(lauflaenge); // write lauflänge to Stream
-			colorIndex++;
-			lauflaenge = 0;
-			return true;
-		}
 	}
 
 	public static RasterImage decodeImage(DataInputStream in) throws IOException {
@@ -147,7 +136,7 @@ public class RLE {
 		int x = 0;										//pixel count
 		while(in.available()>0){						//solange wie datastream available
 
-			int index = in.readByte() & 0xff;			//farbindex
+			int index = in.readByte() & 0xff;			//wird farbe und
 			int lauflaenge = in.readByte() & 0xff;		//lauflänge gezogen
 			System.out.println("lauflänge decode: " + lauflaenge);
 			if(lauflaenge> 255){
@@ -180,9 +169,6 @@ public class RLE {
 				lauflaenge++;
 				//für die definierte lauflänge wird der pixel in der definierten farbe gefärbt und pixelcount +1
 				for (int i = 0; i < lauflaenge; i++) {
-					if(index == 8) {
-						System.out.println("But how");
-					}
 					image.argb[x] = colors[index];
 					x++;
 				}
