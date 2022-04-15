@@ -66,6 +66,12 @@ public class RLE {
 		for(int x = 0; x< image.argb.length; x++){
 			currentColor = image.argb[x];
 
+			if(l == 255){
+				out.writeByte(colorsValue.indexOf(lastColor));
+				out.writeByte(l);
+				l=0;
+			}
+
 			if(lastColor==0){
 				out.writeByte(colorsValue.indexOf(lastColor));
 				out.writeByte(l);
@@ -80,7 +86,9 @@ public class RLE {
 				System.out.println(l);
 				l=0;
 			}
-			l++;
+			else{
+				l++;
+			}
 			lastColor=currentColor;
 
 		}
@@ -143,6 +151,8 @@ public class RLE {
 			int index = in.readByte() & 0xff;			//wird farbe und
 			int lauflaenge = in.readByte() & 0xff;		//lauflänge gezogen
 
+
+
 			if(lauflaenge> 255){						//kommt quasi nie vor
 
 				int overhead = lauflaenge - 255;
@@ -158,6 +168,7 @@ public class RLE {
 			else {
 				//lauflänge +1, da lauflänge 0 1 bedeutet
 				lauflaenge++;
+				
 				//für die definierte lauflänge wird der pixel in der definierten farbe gefärbt und pixelcount +1
 				for (int i = 0; i < lauflaenge; i++) {
 					image.argb[x] = colors[index];
