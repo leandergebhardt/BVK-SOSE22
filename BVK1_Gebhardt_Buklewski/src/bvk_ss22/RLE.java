@@ -138,9 +138,22 @@ public class RLE {
 
 			int index = in.readByte() & 0xff;			//wird farbe und
 			int lauflaenge = in.readByte() & 0xff;		//lauflänge gezogen
+			System.out.println("lauflänge decode: " + lauflaenge);
+			if(lauflaenge> 255){
+				while(lauflaenge>255) {
+					int l = 255;
+					lauflaenge -= 255;
+					for (int i = 0; i <= l; i++) {
+						image.argb[x] = colors[index];
+						x++;
+					}
+					for (int i = 0; i < lauflaenge; i++) {
+						image.argb[x] = colors[index];
+						x++;
+					}
 
-			if(lauflaenge> 255){						//kommt quasi nie vor
-
+				}
+				/**
 				int overhead = lauflaenge - 255;
 				int l = 255;
 				for (int i = 0; i <= l; i++) {
@@ -149,7 +162,7 @@ public class RLE {
 				for (int i = 0; i <= overhead; i++) {
 					image.argb[x] = colors[index];
 				}
-
+				**/
 			}
 			else {
 				//lauflänge +1, da lauflänge 0 1 bedeutet
