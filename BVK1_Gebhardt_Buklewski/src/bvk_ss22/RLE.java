@@ -48,60 +48,75 @@ public class RLE {
 
 		out.writeInt(colorValues.size()); // write number of colors in Stream
 
+		HashMap<Integer, Integer> colors = new HashMap<>();
+
 		Iterator<Integer> iter = colorValues.iterator();
+		int count=0;
 		while (iter.hasNext()){
 			int next = iter.next();
 			System.out.println(next);
-
+			colors.put(count, next);
+			count++;
 			out.writeInt(next); // write color palette in Output Stream
 		}
 
 		// int[] colors = new int[numberOfColors]; // should be Map
-		HashMap<Integer, Integer> colors = new HashMap<>();
+
 
 		// LOOP 2
 		// iterate over image ReadOut Values
 		int currentColor;
 		int lastColor;
-		int colorIndex = 0;
+		int colorIndex=0;
 		System.out.println();
 		for (int x=0; x < image.argb.length; x++) {
 
 				currentColor = image.argb[x]; // get current color from position
-				lastColor = image.argb[x - lauflaenge];
+				//lastColor=image.argb[x-lauflaenge];
+				if(x==0){lastColor=currentColor;}
+				else{lastColor=image.argb[x-1];}
 
 				if (lastColor != currentColor) { // check if color switch
-					if( colors.containsValue(lastColor)) { // color is already saved
+					if(colors.containsValue(lastColor)) { // color is already saved
+
 						for (int key : colors.keySet()) {
 							if(colors.get(key) == lastColor){
 								System.out.println("ouStream(" + key + ") Lauflänge: " + lauflaenge);
 								out.writeByte(key);
 								out.writeByte(lauflaenge);
 								lauflaenge = 0;
+
 							}
 						}
-					} else { // color is new
+
+					}
+					/**
+					else { // color is new
 						colors.put(colorIndex, lastColor);
 						System.out.println("outStream(" + colorIndex + ") Lauflänge: " + lauflaenge);
 						out.writeByte(colorIndex); // write colorIndex to Stream
 						out.writeByte(lauflaenge); // write lauflänge to Stream
 						colorIndex++;
 						lauflaenge = 0;
+
 					}
+					**/
 				}
 				else {
-					if(lauflaenge == 255){
+					if(lauflaenge == 254){
 						for (int key : colors.keySet()) {
 							if (colors.get(key) == lastColor) {
 								System.out.println("ouStream(" + key + ") Lauflänge: " + lauflaenge);
 								out.writeByte(key);
 								out.writeByte(lauflaenge);
 								lauflaenge = 0;
+
 							}
 						}
 					}
 					else {
 						lauflaenge++;
+
 					}
 				}
 		}
@@ -178,10 +193,12 @@ public class RLE {
 				//lauflänge +1, da lauflänge 0 1 bedeutet
 				lauflaenge++;
 				//für die definierte lauflänge wird der pixel in der definierten farbe gefärbt und pixelcount +1
-				for (int i = 0; i < lauflaenge; i++) {
-					image.argb[x] = colors[index];
-					x++;
-				}
+
+					for (int i = 0; i < lauflaenge; i++) {
+						image.argb[x] = colors[index];
+						x++;
+					}
+
 			}
 		}
 
