@@ -78,7 +78,7 @@ public class RasterImage {
 		int width = image.width;
 		int numberOfPixel = height*width;
 		double error = 0.0;
-		for(int x = 0; x<=numberOfPixel; x++){
+		for(int x = 0; x < numberOfPixel; x++){
 			error += this.argb[x]-image.argb[x];
 		}
 		double mse = ((1/numberOfPixel)*Math.pow(error,2));
