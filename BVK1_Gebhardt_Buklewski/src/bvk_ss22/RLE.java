@@ -90,7 +90,19 @@ public class RLE {
 					}
 				}
 				else {
-					lauflaenge++;
+					if(lauflaenge == 255){
+						for (int key : colors.keySet()) {
+							if (colors.get(key) == lastColor) {
+								System.out.println("ouStream(" + key + ") Lauflänge: " + lauflaenge);
+								out.writeByte(key);
+								out.writeByte(lauflaenge);
+								lauflaenge = 0;
+							}
+						}
+					}
+					else {
+						lauflaenge++;
+					}
 				}
 		}
 		System.out.println("_________________________________________________________________________________________");
