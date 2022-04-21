@@ -74,14 +74,28 @@ public class RasterImage {
 	
 	public double getMSEfromComparisonTo(RasterImage image) {
 		// TODO: compare images "this" and "image" and return the Mean Square Error
-		int height = image.height;
-		int width = image.width;
-		int numberOfPixel = height*width;
 		double error = 0.0;
-		for(int x = 0; x < numberOfPixel; x++){
-			error += Math.pow(this.argb[x]-image.argb[x],2);
+		double sum = 0.0;
+		// Einzelene Farbwerte shiften
+		for (int pos = 0; pos < image.argb.length; pos++){
+			int rA = (image.argb[pos] >> 16) & 0xff;
+			int gA = (image.argb[pos] >> 8) & 0xff;
+			int bA = image.argb[pos] & 0xff;
+
+			int rB = (this.argb[pos] >> 16) & 0xff;
+			int gB = (this.argb[pos] >> 8) & 0xff;
+			int bB = this.argb[pos] & 0xff;
+
+			error += Math.pow(rB-rA,2);
+			error += Math.pow(gB-gA,2);
+			error += Math.pow(bB-bA,2);
+
+			sum = sum + error * error;
 		}
-		double mse = ((1/numberOfPixel)*error);
+
+		double numberOfPixel = image.argb.length;
+		double mse = numberOfPixel / sum;
+		System.out.println("Pixels: " + numberOfPixel + " MSE: " + mse);
 		return mse;
 	}
 	
