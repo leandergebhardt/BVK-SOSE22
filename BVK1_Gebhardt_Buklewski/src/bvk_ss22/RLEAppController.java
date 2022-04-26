@@ -22,7 +22,7 @@ import javafx.stage.FileChooser;
 
 public class RLEAppController {
 	
-	private static final String initialFileName = "dilbert_8.png";
+	private static final String initialFileName = "ara_klein";
 	private static File fileOpenPath = new File(".");
 
 	private RasterImage sourceImage;
