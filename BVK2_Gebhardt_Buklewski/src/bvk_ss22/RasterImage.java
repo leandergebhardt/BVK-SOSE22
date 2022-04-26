@@ -30,8 +30,8 @@ public class RasterImage {
 		argb = new int[width * height];
 		Arrays.fill(argb, gray);
 	}
-	
-	public RasterImage(File file) {
+
+	public RasterImage(File file) {			// TODO: change image to black and white
 		// creates an RasterImage by reading the given file
 		Image image = null;
 		if(file != null && file.exists()) {
