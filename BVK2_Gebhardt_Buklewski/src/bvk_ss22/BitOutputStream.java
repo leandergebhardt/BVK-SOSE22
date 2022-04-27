@@ -9,10 +9,13 @@ public class BitOutputStream {
     public BitOutputStream (OutputStream out){
         this.out = out;
     }
-    public void write(int value, int bitnumber){
 
+
+    public Integer write(int value, int bitnumber){
+
+        return value;
     }
     public void close(){
-        
+
     }
 }
