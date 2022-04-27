@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+ * BVK Ue1 SS2022 Vorgabe
+ *
+ * Copyright (C) 2022 by Klaus Jung
+ * All rights reserved.
+ * Date: 2021-03-24
+-->
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane maxHeight="580.0" maxWidth="835.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="bvk_ss22.GolombAppController">
+   <bottom>
+      <Label fx:id="messageLabel" minHeight="27.0" text="Message Label" BorderPane.alignment="CENTER">
+         <padding>
+            <Insets top="10.0" />
+         </padding>
+      </Label>
+   </bottom>
+   <padding>
+      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+   </padding>
+   <top>
+      <GridPane hgap="5.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="387.0" prefWidth="566.0" vgap="5.0" BorderPane.alignment="CENTER">
+         <columnConstraints>
+            <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" percentWidth="50.0" prefWidth="100.0" />
+            <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" percentWidth="50.0" />
+            <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" percentWidth="50.0" />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints minHeight="10.0" vgrow="ALWAYS" />
+            <RowConstraints minHeight="50.0" valignment="TOP" vgrow="NEVER" />
+         </rowConstraints>
+         <children>
+            <TitledPane collapsible="false" layoutX="10.0" layoutY="10.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Source Image">
+               <content>
+                  <ScrollPane fx:id="sourceScrollPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" pannable="true">
+                     <content>
+                        <ImageView fx:id="sourceImageView1" pickOnBounds="true" preserveRatio="true" smooth="false" />
+                     </content>
+                  </ScrollPane>
+               </content>
+            </TitledPane>
+            <TitledPane collapsible="false" layoutX="10.0" layoutY="10.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Reprocessed  Image" GridPane.columnIndex="1">
+               <content>
+                  <ScrollPane fx:id="sourceImageView" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" pannable="true">
+                     <content>
+                        <ImageView fx:id="sourceImageView2" pickOnBounds="true" preserveRatio="true" smooth="false" />
+                     </content>
+                  </ScrollPane>
+               </content>
+            </TitledPane>
+            <TitledPane collapsible="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Golomb Image" GridPane.columnIndex="2">
+               <content>
+                  <ScrollPane fx:id="rleScrollPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" pannable="true">
+                     <content>
+                        <ImageView fx:id="rleImageView" pickOnBounds="true" preserveRatio="true" smooth="false" />
+                     </content>
+                  </ScrollPane>
+               </content>
+            </TitledPane>
+            <VBox spacing="5.0" GridPane.rowIndex="1">
+               <children>
+                  <Label fx:id="sourceInfoLabel" text="Info Label" />
+                  <HBox spacing="10.0" VBox.vgrow="NEVER">
+                     <children>
+                        <Button mnemonicParsing="false" onAction="#openImage" prefHeight="27.0" text="Open Image" />
+                        <Button mnemonicParsing="false" onAction="#saveRLEImage" text="Save RLE" />
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+            <VBox spacing="5.0" GridPane.columnIndex="2" GridPane.rowIndex="1">
+               <children>
+                  <Label fx:id="rleInfoLabel" text="Info Label" />
+                  <HBox alignment="CENTER_LEFT" spacing="8.0">
+                     <children>
+                        <Button mnemonicParsing="false" onAction="#openRLEImage" prefHeight="27.0" text="Open gol" />
+                        <Label text="Zoom:" />
+                        <Slider fx:id="zoomSlider" blockIncrement="0.1" max="20.0" min="1.0" onKeyReleased="#zoomChanged" onMouseClicked="#zoomChanged" onMouseDragged="#zoomChanged" />
+                        <Label fx:id="zoomLabel" text="1.0" />
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+            <VBox layoutX="10.0" layoutY="346.0" spacing="5.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+               <children>
+                  <Label fx:id="sourceInfoLabel1" text="Info Label" />
+                  <HBox spacing="10.0" VBox.vgrow="NEVER">
+                     <children>
+                        <Label text="M" />
+                        <Slider />
+                        <Label text="1" />
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+         </children>
+      </GridPane>
+   </top>
+</BorderPane>

@@ -20,9 +20,9 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.Region;
 import javafx.stage.FileChooser;
 
-public class RLEAppController {
+public class GolombAppController {
 	
-	private static final String initialFileName = "dilbert_8.png";
+	private static final String initialFileName = "ara_klein.pdf";
 	private static File fileOpenPath = new File(".");
 
 	private RasterImage sourceImage;

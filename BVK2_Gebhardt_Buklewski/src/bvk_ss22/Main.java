@@ -22,10 +22,10 @@ import javafx.scene.layout.BorderPane;
 public class Main extends Application {
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-		BorderPane root = (BorderPane)loadFXML("RLEAppView.fxml");
+		BorderPane root = (BorderPane)loadFXML("GolombAppView.fxml");
 		Scene scene = new Scene(root);
 		primaryStage.setScene(scene);
-		primaryStage.setTitle("RLE Application - SS2022 - <Leander Gebhardt & Karl Buklewski>"); // TODO: add your name(s)
+		primaryStage.setTitle("Golomb Application - SS2022 - <Leander Gebhardt & Karl Buklewski>"); // TODO: add your name(s)
 		primaryStage.show();
 	}
 	
