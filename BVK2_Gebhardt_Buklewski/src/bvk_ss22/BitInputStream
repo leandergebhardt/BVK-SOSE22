@@ -1,15 +1,19 @@
 
 package bvk_ss22;
 
-public class BitInputStream (Inputstream java.io.InputStream){
+public class BitInputStream {
 
+        //Inputstream java.io.InputStream
+
+
+        public int read(int bitNumber) {
+
+                return 0;
+        }
+
+        public void close() {
 
         }
 
-        public int read(int bitNumber){
 
-        }
-
-        public void close(){
-
-        }
+}
