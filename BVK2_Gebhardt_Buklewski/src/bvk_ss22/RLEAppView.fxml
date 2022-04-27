@@ -35,7 +35,7 @@
                   </ScrollPane>
                </content>
             </TitledPane>
-            <TitledPane collapsible="false" layoutX="10.0" layoutY="10.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Source Image" GridPane.columnIndex="1">
+            <TitledPane collapsible="false" layoutX="10.0" layoutY="10.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Reprocessed Image" GridPane.columnIndex="1">
                <content>
                   <ScrollPane fx:id="sourceScrollPane1" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" pannable="true">
                      <content>
@@ -44,7 +44,7 @@
                   </ScrollPane>
                </content>
             </TitledPane>
-            <TitledPane collapsible="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="RLE Image" GridPane.columnIndex="2">
+            <TitledPane collapsible="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Golomb Image" GridPane.columnIndex="2">
                <content>
                   <ScrollPane fx:id="rleScrollPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" pannable="true">
                      <content>
@@ -64,7 +64,19 @@
                   </HBox>
                </children>
             </VBox>
-            <VBox spacing="5.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+            <VBox layoutX="326.0" layoutY="78.0" spacing="5.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+               <children>
+                  <Label fx:id="rleInfoLabel1" text="Info Label" />
+                  <HBox alignment="CENTER_LEFT" spacing="8.0">
+                     <children>
+                        <Label text="M: " />
+                        <Slider fx:id="zoomSlider1" blockIncrement="0.1" max="130.0" min="1.0" onKeyReleased="#zoomChanged" onMouseClicked="#zoomChanged" onMouseDragged="#zoomChanged" />
+                        <Label fx:id="zoomLabel1" text="1" />
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+            <VBox spacing="5.0" GridPane.columnIndex="2" GridPane.rowIndex="1">
                <children>
                   <Label fx:id="rleInfoLabel" text="Info Label" />
                   <HBox alignment="CENTER_LEFT" spacing="8.0">
