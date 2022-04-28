@@ -1,6 +1,8 @@
 package bvk_ss22;
 
 import org.junit.Before;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.Assert;
 
@@ -14,14 +16,15 @@ class BitOutputStreamTest {
     private BitOutputStream out;
     @org.junit.jupiter.api.Test
 
-    @Before
+    @BeforeEach
     public void initOut(){
-        OutputStream s = null;
-        out = new BitOutputStream(s);
+        OutputStream s;
+        BitOutputStream out = new BitOutputStream();
     }
 
     @Test
     public void writeTest() {
-        assertEquals(1110, out.write(14,4));
+
+        assertEquals(00000001,new BitOutputStream().write(1,8));
     }
 }
