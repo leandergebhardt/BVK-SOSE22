@@ -40,6 +40,15 @@ public class RLEAppController {
     @FXML
     private Label sourceInfoLabel;
 
+	@FXML
+	private ImageView reprocessedImageView;
+
+	@FXML
+	private ScrollPane reprocessedScrollPane;
+
+	@FXML
+	private Label reprocessedInfoLabel;
+
     @FXML
     private ImageView rleImageView;
 
@@ -57,6 +66,12 @@ public class RLEAppController {
 
     @FXML
     private Label zoomLabel;
+
+	@FXML
+	private Slider mSlider;
+
+	@FXML
+	private Label mLabel;
 
     @FXML
     void openImage() {
@@ -77,7 +92,13 @@ public class RLEAppController {
 	public void initialize() {
 		loadAndDisplayImage(new File(initialFileName));		
 	}
-	
+
+	@FXML
+	void mChanged(){
+    	double M = mSlider.getValue();
+    	System.out.println(M);
+	}
+
  	@FXML
     void zoomChanged() {
     	double zoomFactor = zoomSlider.getValue();

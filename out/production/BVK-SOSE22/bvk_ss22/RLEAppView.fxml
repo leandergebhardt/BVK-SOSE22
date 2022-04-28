@@ -70,8 +70,8 @@
                   <HBox alignment="CENTER_LEFT" spacing="8.0">
                      <children>
                         <Label text="M: " />
-                        <Slider fx:id="zoomSlider1" blockIncrement="0.1" max="130.0" min="1.0" onKeyReleased="#zoomChanged" onMouseClicked="#zoomChanged" onMouseDragged="#zoomChanged" />
-                        <Label fx:id="zoomLabel1" text="1" />
+                        <Slider fx:id="mSlider" blockIncrement="0.1" max="130.0" min="1.0" onKeyReleased="#mChanged" onMouseClicked="#mChanged" onMouseDragged="#mChanged" />
+                        <Label fx:id="mLabel" text="1" />
                      </children>
                   </HBox>
                </children>
