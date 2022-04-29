@@ -24,7 +24,7 @@ public class BitOutputStream {
         }
         int r = 0;
         for(int x = bitnumber-1; x >= 0; x--){
-            r= r | (buffer[x]<<x);                                       //pascht
+            r= r | (buffer[x]<<x);                                       //passt
         }
         return r;
     }

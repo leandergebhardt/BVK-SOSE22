@@ -33,4 +33,16 @@ class BitOutputStreamTest {
 
         assertEquals(2,new BitOutputStream().write(2,8));
     }
+
+    @Test
+    public void writeTest3() {
+
+        assertEquals(3,new BitOutputStream().write(3,8));
+    }
+
+    @Test
+    public void writeTest4() {
+
+        assertEquals(3,new BitOutputStream().write(3,6));
+    }
 }
