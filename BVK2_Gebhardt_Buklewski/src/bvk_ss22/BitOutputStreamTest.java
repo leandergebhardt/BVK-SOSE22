@@ -23,8 +23,14 @@ class BitOutputStreamTest {
     }
 
     @Test
-    public void writeTest() {
+    public void writeTest1() {
 
-        assertEquals(00000001,new BitOutputStream().write(1,8));
+        assertEquals(1,new BitOutputStream().write(1,8));
+
+    }
+    @Test
+    public void writeTest2() {
+
+        assertEquals(2,new BitOutputStream().write(2,8));
     }
 }

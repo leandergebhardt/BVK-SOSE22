@@ -23,8 +23,8 @@ public class BitOutputStream {
 
         }
         int r = 0;
-        for(int x = 0; x<bitnumber; x++){
-            r= buffer[x];                                       //der buffer lese/schreibe part nicht ganz...
+        for(int x = bitnumber-1; x >= 0; x--){
+            r= r | (buffer[x]<<x);                                       //pascht
         }
         return r;
     }
