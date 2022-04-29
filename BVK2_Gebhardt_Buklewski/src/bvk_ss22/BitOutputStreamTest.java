@@ -45,4 +45,16 @@ class BitOutputStreamTest {
 
         assertEquals(3,new BitOutputStream().write(3,6));
     }
+
+    @Test
+    public void writeTest5() {
+
+        assertEquals(126,new BitOutputStream().write(126,8));
+    }
+
+    @Test
+    public void writeTest6() {
+
+        assertEquals(1,new BitOutputStream().write(1,1));
+    }
 }
