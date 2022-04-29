@@ -11,8 +11,13 @@ import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.net.URL;
+import java.util.ResourceBundle;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Slider;
@@ -20,7 +25,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.Region;
 import javafx.stage.FileChooser;
 
-public class RLEAppController {
+public class RLEAppController implements Initializable {
 	
 	private static final String initialFileName = "dilbert_8.png";
 	private static File fileOpenPath = new File(".");
@@ -73,6 +78,16 @@ public class RLEAppController {
 	@FXML
 	private Label mLabel;
 
+	@FXML
+	private ChoiceBox<String> myChoiceBox;
+
+	private String[] processTypes = {"Copy", "DPCM"};
+
+
+	public void getProcessType(ActionEvent event) {
+		String process = myChoiceBox.getValue();
+		// TODO trigger image processing
+	}
     @FXML
     void openImage() {
     	FileChooser fileChooser = new FileChooser();
@@ -204,10 +219,11 @@ public class RLEAppController {
 			scrollPane.setVvalue(scrollY);
 		}
 	}
-	
-
-	
 
 
-
+	@Override
+	public void initialize(URL location, ResourceBundle resources) {
+		myChoiceBox.getItems().addAll(processTypes);
+		myChoiceBox.setOnAction(this::getProcessType);
+	}
 }
