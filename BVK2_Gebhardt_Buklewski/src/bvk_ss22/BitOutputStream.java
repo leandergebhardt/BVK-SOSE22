@@ -8,7 +8,7 @@ public class BitOutputStream {
 
     //Integer[] buffer;
     Integer[] buffer = new Integer[8];
-    public BitOutputStream (){
+    public BitOutputStream (OutputStream out){
         this.out = out;
 
     }
@@ -24,8 +24,10 @@ public class BitOutputStream {
         }
         int r = 0;
         for(int x = bitnumber-1; x >= 0; x--){
-            r= r | (buffer[x]<<x);                                       //passt
+            r= r | (buffer[x]<<x);
+            //passt
         }
+
         return r;
     }
     public void close(){
