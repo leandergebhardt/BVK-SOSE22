@@ -25,7 +25,7 @@ public class Main extends Application {
 		BorderPane root = (BorderPane)loadFXML("RLEAppView.fxml");
 		Scene scene = new Scene(root);
 		primaryStage.setScene(scene);
-		primaryStage.setTitle("RLE Application - SS2022 - <Leander Gebhardt & Karl Buklewski>"); // TODO: add your name(s)
+		primaryStage.setTitle("RLE Application - SS2022 - <Leander Gebhardt & Karl Buklewski>");
 		primaryStage.show();
 	}
 	
