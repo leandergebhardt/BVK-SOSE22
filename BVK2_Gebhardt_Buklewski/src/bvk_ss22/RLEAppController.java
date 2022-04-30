@@ -67,9 +67,6 @@ public class RLEAppController implements Initializable {
     private Label messageLabel;
 
     @FXML
-    private Slider zoomSlider;
-
-    @FXML
     private Label zoomLabel;
 
 	@FXML
@@ -95,8 +92,6 @@ public class RLEAppController implements Initializable {
     	fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Images (*.jpg, *.png, *.gif)", "*.jpeg", "*.jpg", "*.png", "*.gif"));
     	File selectedFile = fileChooser.showOpenDialog(null);
     	if(selectedFile != null) {
-        	zoomSlider.setValue(1);
-    		zoomChanged();
     		fileOpenPath = selectedFile.getParentFile();
     		loadAndDisplayImage(selectedFile);
     		messageLabel.getScene().getWindow().sizeToScene();;
@@ -113,14 +108,6 @@ public class RLEAppController implements Initializable {
     	double M = mSlider.getValue();
     	System.out.println(M);
 	}
-
- 	@FXML
-    void zoomChanged() {
-    	double zoomFactor = zoomSlider.getValue();
-		zoomLabel.setText(String.format("%.1f", zoomFactor));
-    	zoom(sourceImageView, sourceScrollPane, zoomFactor);
-    	zoom(rleImageView, rleScrollPane, zoomFactor);
-    }
 	
 	private void loadAndDisplayImage(File file) {
 		sourceFileName = file.getName();
