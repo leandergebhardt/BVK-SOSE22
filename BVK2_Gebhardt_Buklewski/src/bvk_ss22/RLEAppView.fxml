@@ -81,10 +81,8 @@
                   <Label fx:id="rleInfoLabel" text="Info Label" />
                   <HBox alignment="CENTER_LEFT" spacing="8.0">
                      <children>
-                        <Button mnemonicParsing="false" onAction="#openRLEImage" prefHeight="27.0" text="Open RLE" />
-                        <Label text="Zoom:" />
-                        <Slider fx:id="zoomSlider" blockIncrement="0.1" max="20.0" min="1.0" onKeyReleased="#zoomChanged" onMouseClicked="#zoomChanged" onMouseDragged="#zoomChanged" />
-                        <Label fx:id="zoomLabel" text="1.0" />
+                        <Button mnemonicParsing="false" onAction="#openRLEImage" prefHeight="27.0" text="Save Golomb Picture" />
+                        <Button layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#openRLEImage" prefHeight="27.0" text="Open Golomb Picture" />
                      </children>
                   </HBox>
                </children>
