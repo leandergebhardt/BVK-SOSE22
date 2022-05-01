@@ -3,6 +3,7 @@ package bvk_ss22;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
 import java.io.OutputStream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
