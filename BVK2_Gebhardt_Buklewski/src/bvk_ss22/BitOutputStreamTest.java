@@ -39,8 +39,9 @@ class BitOutputStreamTest {
 
     @Test
     public void writeTest4() throws IOException {
+        BitOutputStream out = new BitOutputStream(s);
 
-        assertEquals(3,new BitOutputStream(s).write(3,6));
+        assertEquals(4,testClose(4,6,out));
     }
 
     @Test
@@ -51,13 +52,13 @@ class BitOutputStreamTest {
 
     @Test
     public void writeTestSmallBitnumber() throws IOException {
-
-        assertEquals(3,testClose());
+        BitOutputStream out = new BitOutputStream(s);
+        assertEquals(3,testClose(3, 3, out));
     }
 
-    private int testClose() throws IOException {
-        BitOutputStream out = new BitOutputStream(s);
-        out.write(3,2);
+    private int testClose(int value, int bitnumber, BitOutputStream out) throws IOException {
+
+        out.write(value,bitnumber);
         int r = out.close();
         return r;
 
