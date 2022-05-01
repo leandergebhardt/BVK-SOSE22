@@ -19,8 +19,7 @@ import java.util.Iterator;
 public class RLE {
 	
 	public static void encodeImage(RasterImage image, DataOutputStream out) throws IOException {
-		
-		// TODO: write RLE data to DataOutputStream
+
 		int width = image.width;
 		int height = image.height;
 		int lauflaenge = 0;

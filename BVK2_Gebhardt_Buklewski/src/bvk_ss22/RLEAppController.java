@@ -11,8 +11,13 @@ import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.net.URL;
+import java.util.ResourceBundle;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Slider;
@@ -20,7 +25,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.Region;
 import javafx.stage.FileChooser;
 
-public class RLEAppController {
+public class RLEAppController implements Initializable {
 	
 	private static final String initialFileName = "dilbert_8.png";
 	private static File fileOpenPath = new File(".");
@@ -62,9 +67,6 @@ public class RLEAppController {
     private Label messageLabel;
 
     @FXML
-    private Slider zoomSlider;
-
-    @FXML
     private Label zoomLabel;
 
 	@FXML
@@ -73,6 +75,16 @@ public class RLEAppController {
 	@FXML
 	private Label mLabel;
 
+	@FXML
+	private ChoiceBox<String> myChoiceBox;
+
+	private String[] processTypes = {"Copy", "DPCM"};
+
+
+	public void getProcessType(ActionEvent event) {
+		String process = myChoiceBox.getValue();
+		// TODO trigger image processing
+	}
     @FXML
     void openImage() {
     	FileChooser fileChooser = new FileChooser();
@@ -80,8 +92,6 @@ public class RLEAppController {
     	fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Images (*.jpg, *.png, *.gif)", "*.jpeg", "*.jpg", "*.png", "*.gif"));
     	File selectedFile = fileChooser.showOpenDialog(null);
     	if(selectedFile != null) {
-        	zoomSlider.setValue(1);
-    		zoomChanged();
     		fileOpenPath = selectedFile.getParentFile();
     		loadAndDisplayImage(selectedFile);
     		messageLabel.getScene().getWindow().sizeToScene();;
@@ -98,14 +108,6 @@ public class RLEAppController {
     	double M = mSlider.getValue();
     	System.out.println(M);
 	}
-
- 	@FXML
-    void zoomChanged() {
-    	double zoomFactor = zoomSlider.getValue();
-		zoomLabel.setText(String.format("%.1f", zoomFactor));
-    	zoom(sourceImageView, sourceScrollPane, zoomFactor);
-    	zoom(rleImageView, rleScrollPane, zoomFactor);
-    }
 	
 	private void loadAndDisplayImage(File file) {
 		sourceFileName = file.getName();
@@ -204,10 +206,11 @@ public class RLEAppController {
 			scrollPane.setVvalue(scrollY);
 		}
 	}
-	
-
-	
 
 
-
+	@Override
+	public void initialize(URL location, ResourceBundle resources) {
+		myChoiceBox.getItems().addAll(processTypes);
+		myChoiceBox.setOnAction(this::getProcessType);
+	}
 }
