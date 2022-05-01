@@ -50,8 +50,16 @@ class BitOutputStreamTest {
     }
 
     @Test
-    public void writeTest6() throws IOException {
+    public void writeTestSmallBitnumber() throws IOException {
 
-        assertEquals(1,new BitOutputStream(s).write(1,1));
+        assertEquals(3,testClose());
+    }
+
+    private int testClose() throws IOException {
+        BitOutputStream out = new BitOutputStream(s);
+        out.write(3,2);
+        int r = out.close();
+        return r;
+
     }
 }

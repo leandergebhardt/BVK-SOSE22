@@ -9,6 +9,7 @@ public class BitInputStream {
         InputStream in;
         Integer[] buffer = new Integer[8];
         public BitInputStream (InputStream in){
+
                 this.in = in;
         }
 
