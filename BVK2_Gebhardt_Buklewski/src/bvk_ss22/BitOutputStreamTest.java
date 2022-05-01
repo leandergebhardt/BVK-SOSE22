@@ -24,37 +24,36 @@ class BitOutputStreamTest {
     }
 
     @Test
-    public void writeTest1() {
-
+    public void writeTest1() throws IOException {
         assertEquals(1,new BitOutputStream(s).write(1,8));
 
     }
     @Test
-    public void writeTest2() {
+    public void writeTest2() throws IOException {
 
         assertEquals(2,new BitOutputStream(s).write(2,8));
     }
 
     @Test
-    public void writeTest3() {
+    public void writeTest3() throws IOException {
 
         assertEquals(3,new BitOutputStream(s).write(3,8));
     }
 
     @Test
-    public void writeTest4() {
+    public void writeTest4() throws IOException {
 
         assertEquals(3,new BitOutputStream(s).write(3,6));
     }
 
     @Test
-    public void writeTest5() {
+    public void writeTest5() throws IOException {
 
         assertEquals(126,new BitOutputStream(s).write(126,8));
     }
 
     @Test
-    public void writeTest6() {
+    public void writeTest6() throws IOException {
 
         assertEquals(1,new BitOutputStream(s).write(1,1));
     }

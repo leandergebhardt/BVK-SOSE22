@@ -1,5 +1,6 @@
 package bvk_ss22;
 
+import java.io.IOException;
 import java.io.OutputStream;
 
 public class BitOutputStream {
@@ -15,7 +16,7 @@ public class BitOutputStream {
 
 
 
-    public Integer write(int value, int bitnumber){
+    public Integer write(int value, int bitnumber) throws IOException {
 
         for(int x = bitnumber-1; x >= 0; x--) {
              int b = (value >>x) & 1;
@@ -27,10 +28,13 @@ public class BitOutputStream {
             r= r | (buffer[x]<<x);
             //passt
         }
+            out.write(r);
+//test
 
         return r;
     }
-    public void close(){
+    public void close() throws IOException {
+        out.close();
         
     }
 }
