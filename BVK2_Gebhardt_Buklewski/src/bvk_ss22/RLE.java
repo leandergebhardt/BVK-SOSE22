@@ -59,7 +59,7 @@ public class RLE {
 			count++;
 			out.writeInt(next); // write color palette in Output Stream
 		}
-		
+		//
 		// LOOP 2
 		// iterate over image ReadOut Values
 		int currentColor;

@@ -28,7 +28,7 @@ public class Main extends Application {
 		primaryStage.setTitle("RLE Application - SS2022 - <Leander Gebhardt & Karl Buklewski>"); // TODO: add your name(s)
 		primaryStage.show();
 	}
-	
+	//
 	public static void main(String[] args) {
 		launch(args);
 	}
