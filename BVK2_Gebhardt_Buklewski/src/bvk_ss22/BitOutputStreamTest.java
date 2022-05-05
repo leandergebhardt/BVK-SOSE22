@@ -3,6 +3,7 @@ package bvk_ss22;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
@@ -13,7 +14,7 @@ class BitOutputStreamTest {
     private BitOutputStream out;
     //@org.junit.jupiter.api.Test
 
-    OutputStream s = null;
+    ByteArrayOutputStream s = null;
     @BeforeEach
     public void initOut(){
         //OutputStream s = null;
