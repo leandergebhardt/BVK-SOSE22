@@ -22,7 +22,7 @@ public class BitOutputStream {
 
         for(int x = bitnumber-1; x >= 0; x--) {
              int b = (value >>x) & 1;
-            buffer[x] = b;                          //der part funktioniert
+            buffer[count] = b;                          //der part funktioniert
             count++;
 
             if(count==8) {
@@ -32,6 +32,7 @@ public class BitOutputStream {
 
                 }
                 out.write(r);
+                count = 0;
                 r = 0;
             }
         }
@@ -49,6 +50,7 @@ public class BitOutputStream {
     }
     public int close() throws IOException {
         int r = 0;
+        int count = 0;
         for (int x = 7; x >= 0; x--) {
             if(buffer[x]== null){buffer[x] = 0;}
             r = r | (buffer[x] << x);
