@@ -212,6 +212,7 @@ public class RLEAppController implements Initializable {
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		myChoiceBox.getItems().addAll(processTypes);
+		myChoiceBox.setValue(processTypes[0]);
 		myChoiceBox.setOnAction(this::getProcessType);
 	}
 }
