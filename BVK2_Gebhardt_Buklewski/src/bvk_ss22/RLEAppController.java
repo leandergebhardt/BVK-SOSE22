@@ -6,14 +6,6 @@
 
 package bvk_ss22;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.net.URL;
-import java.util.ResourceBundle;
-
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -24,6 +16,10 @@ import javafx.scene.control.Slider;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Region;
 import javafx.stage.FileChooser;
+
+import java.io.*;
+import java.net.URL;
+import java.util.ResourceBundle;
 
 public class RLEAppController implements Initializable {
 	
@@ -83,6 +79,11 @@ public class RLEAppController implements Initializable {
 
 	public void getProcessType(ActionEvent event) {
 		String process = myChoiceBox.getValue();
+		if(process == "Copy"){
+
+		} else if(process == "DPCM"){
+
+		}
 		// TODO trigger image processing
 	}
     @FXML
