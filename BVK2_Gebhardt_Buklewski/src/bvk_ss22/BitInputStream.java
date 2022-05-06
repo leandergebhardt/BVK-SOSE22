@@ -7,24 +7,30 @@ import java.io.InputStream;
 public class BitInputStream {
 
         InputStream in;
-        Integer[] buffer = new Integer[8];
+        Integer[] buffer  = new Integer[8];
+
         public BitInputStream (InputStream in){
 
                 this.in = in;
         }
 
-
+        int count = 0;
         public int read(int bitNumber) throws IOException {
+                count = 0;
                 int i = in.read();
 
-                for (int x = bitNumber - 1; x >= 0; x--) {
-                        int b = (i >> x) & 1;
-                        buffer[x] = b;                          //der part funktioniert
+                for (int x = 8; x>0 ; x--) {
+                        int b = (i >> x-1) & 1;
+                        buffer[count] = b;
+                        count++;
+
 
                 }
+                count = 0;
                 int r = 0;
-                for (int x = bitNumber - 1; x >= 0; x--) {
-                        r = r | (buffer[x] << x);
+                for (int x = bitNumber-1; count != bitNumber; x--) {
+                        r = r | (buffer[count] << x);
+                        count++;
 
                 }
                 return r;
