@@ -6,6 +6,7 @@
 
 package bvk_ss22;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
@@ -17,7 +18,7 @@ import javafx.stage.FileChooser;
 
 import java.io.*;
 
-public class RLEAppController {
+public class GolombAppController {
 
 	private static final String initialFileName = "./BVK2_Gebhardt_Buklewski/ara_klein.png";
 	private static File fileOpenPath = new File(".");
@@ -26,6 +27,7 @@ public class RLEAppController {
 	private String sourceFileName;
 	
 	private RasterImage processedImage;
+	private RasterImage greyScaleImage;
 	private long rleImageFileSize;
 
     @FXML
@@ -90,15 +92,27 @@ public class RLEAppController {
 		loadAndDisplayImage(new File(initialFileName));
 		myChoiceBox.getItems().addAll(processTypes);
 		myChoiceBox.setValue(processTypes[0]);
-		// TODO trigger image processing
+		myChoiceBox.setOnAction(this::getProcessType);
 		String processType = myChoiceBox.getValue();
 		if(processType == "Copy") {
-			// Filter.greyscale();
-			processedImage = Filter.copy(sourceImage, processedImage);
+			greyScaleImage = Filter.greyScale(sourceImage, processedImage);
+			processedImage = Filter.copy(greyScaleImage, processedImage);
+			processedImage.setToView(processedImageView);
+		}
+	}
+
+	private void getProcessType(ActionEvent actionEvent) {
+		String processType = myChoiceBox.getValue();
+
+		if(processType == "Copy") {
+			messageLabel.setText("Copy");
+			greyScaleImage = Filter.greyScale(sourceImage, processedImage);
+			processedImage = Filter.copy(greyScaleImage, processedImage);
 			processedImage.setToView(processedImageView);
 		}
 		if(processType == "DPCM") {
-
+			messageLabel.setText("Switched to DPCM");
+			// TODO trigger image processing
 		}
 	}
 
@@ -114,7 +128,8 @@ public class RLEAppController {
 		sourceFileName = file.getName();
 		messageLabel.setText("Opened image " + sourceFileName);
 		sourceImage = new RasterImage(file);
-		sourceImage.setToView(sourceImageView);
+		greyScaleImage = Filter.greyScale(sourceImage, sourceImage);
+		greyScaleImage.setToView(sourceImageView);
 		sourceInfoLabel.setText(sourceFileName);
 		processedImage = new RasterImage(sourceImage.width, sourceImage.height);
 		processedImage.setToView(processedImageView);
