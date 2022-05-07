@@ -6,17 +6,8 @@
 
 package bvk_ss22;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.net.URL;
-import java.util.ResourceBundle;
-
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
@@ -25,15 +16,18 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.Region;
 import javafx.stage.FileChooser;
 
-public class RLEAppController implements Initializable {
-	
-	private static final String initialFileName = "dilbert_8.png";
+import java.io.*;
+
+public class GolombAppController {
+
+	private static final String initialFileName = "./BVK2_Gebhardt_Buklewski/ara_klein.png";
 	private static File fileOpenPath = new File(".");
 
 	private RasterImage sourceImage;
 	private String sourceFileName;
 	
-	private RasterImage rleImage;
+	private RasterImage processedImage;
+	private RasterImage greyScaleImage;
 	private long rleImageFileSize;
 
     @FXML
@@ -55,7 +49,7 @@ public class RLEAppController implements Initializable {
 	private Label reprocessedInfoLabel;
 
     @FXML
-    private ImageView rleImageView;
+    private ImageView processedImageView;
 
     @FXML
     private ScrollPane rleScrollPane;
@@ -73,18 +67,13 @@ public class RLEAppController implements Initializable {
 	private Slider mSlider;
 
 	@FXML
-	private Label mLabel;
+	private Label mValue;
 
 	@FXML
 	private ChoiceBox<String> myChoiceBox;
 
 	private String[] processTypes = {"Copy", "DPCM"};
 
-
-	public void getProcessType(ActionEvent event) {
-		String process = myChoiceBox.getValue();
-		// TODO trigger image processing
-	}
     @FXML
     void openImage() {
     	FileChooser fileChooser = new FileChooser();
@@ -100,12 +89,38 @@ public class RLEAppController implements Initializable {
 
 	@FXML
 	public void initialize() {
-		loadAndDisplayImage(new File(initialFileName));		
+		loadAndDisplayImage(new File(initialFileName));
+		myChoiceBox.getItems().addAll(processTypes);
+		myChoiceBox.setValue(processTypes[0]);
+		myChoiceBox.setOnAction(this::getProcessType);
+		String processType = myChoiceBox.getValue();
+		if(processType == "Copy") {
+			greyScaleImage = Filter.greyScale(sourceImage, processedImage);
+			processedImage = Filter.copy(greyScaleImage, processedImage);
+			processedImage.setToView(processedImageView);
+		}
+	}
+
+	private void getProcessType(ActionEvent actionEvent) {
+		String processType = myChoiceBox.getValue();
+
+		if(processType == "Copy") {
+			messageLabel.setText("Copy");
+			greyScaleImage = Filter.greyScale(sourceImage, processedImage);
+			processedImage = Filter.copy(greyScaleImage, processedImage);
+			processedImage.setToView(processedImageView);
+		}
+		if(processType == "DPCM") {
+			messageLabel.setText("Switched to DPCM");
+			// TODO trigger image processing
+		}
 	}
 
 	@FXML
 	void mChanged(){
     	double M = mSlider.getValue();
+		int m = (int) Math.floor(M);
+		mValue.setText(""+ m +"");
     	System.out.println(M);
 	}
 	
@@ -113,24 +128,25 @@ public class RLEAppController implements Initializable {
 		sourceFileName = file.getName();
 		messageLabel.setText("Opened image " + sourceFileName);
 		sourceImage = new RasterImage(file);
-		sourceImage.setToView(sourceImageView);
-		sourceInfoLabel.setText("");
-		rleImage = new RasterImage(sourceImage.width, sourceImage.height);
-		rleImage.setToView(rleImageView);
+		greyScaleImage = Filter.greyScale(sourceImage, sourceImage);
+		greyScaleImage.setToView(sourceImageView);
+		sourceInfoLabel.setText(sourceFileName);
+		processedImage = new RasterImage(sourceImage.width, sourceImage.height);
+		processedImage.setToView(processedImageView);
 		compareImages();
 	}
 	
 	private void compareImages() {
-		if(sourceImage.argb.length != rleImage.argb.length || rleImageFileSize == 0) {
+		if(sourceImage.argb.length != processedImage.argb.length || rleImageFileSize == 0) {
 			rleInfoLabel.setText("");
 			return;
 		}
-		double mse = rleImage.getMSEfromComparisonTo(sourceImage);
+		double mse = processedImage.getMSEfromComparisonTo(sourceImage);
 		rleInfoLabel.setText(String.format("MSE = %.1f", mse));
 	}
 	
 	@FXML
-	public void saveRLEImage() {
+	public void saveGolombImage() {
     	FileChooser fileChooser = new FileChooser();
     	fileChooser.setInitialDirectory(fileOpenPath);
     	fileChooser.setInitialFileName(sourceFileName.substring(0, sourceFileName.lastIndexOf('.')) + ".run");
@@ -150,7 +166,7 @@ public class RLEAppController implements Initializable {
 	}
 	
 	@FXML
-	public void openRLEImage() {
+	public void openGolombImage() {
     	FileChooser fileChooser = new FileChooser();
     	fileChooser.setInitialDirectory(fileOpenPath);
     	fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("RLE Images (*.run)", "*.run"));
@@ -160,10 +176,10 @@ public class RLEAppController implements Initializable {
     		try {
     			DataInputStream inputStream = new DataInputStream(new FileInputStream(selectedFile));
     			long startTime = System.currentTimeMillis();
-    			rleImage = RLE.decodeImage(inputStream);
+    			processedImage = RLE.decodeImage(inputStream);
     			long time = System.currentTimeMillis() - startTime;
     			messageLabel.setText("Decoding in " + time + " ms");
-    			rleImage.setToView(rleImageView);
+    			processedImage.setToView(processedImageView);
     			compareImages();
     		} catch (Exception e) {
     			e.printStackTrace();
@@ -205,12 +221,5 @@ public class RLEAppController implements Initializable {
 			scrollPane.setHvalue(scrollX);
 			scrollPane.setVvalue(scrollY);
 		}
-	}
-
-
-	@Override
-	public void initialize(URL location, ResourceBundle resources) {
-		myChoiceBox.getItems().addAll(processTypes);
-		myChoiceBox.setOnAction(this::getProcessType);
 	}
 }

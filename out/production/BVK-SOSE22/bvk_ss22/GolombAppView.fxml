@@ -13,7 +13,7 @@
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane maxHeight="580.0" maxWidth="835.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="bvk_ss22.RLEAppController">
+<BorderPane maxHeight="580.0" maxWidth="835.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="bvk_ss22.GolombAppController">
    <center>
       <GridPane hgap="5.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" vgap="5.0" BorderPane.alignment="CENTER">
          <columnConstraints>
@@ -37,9 +37,9 @@
             </TitledPane>
             <TitledPane collapsible="false" layoutX="10.0" layoutY="10.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Reprocessed Image" GridPane.columnIndex="1">
                <content>
-                  <ScrollPane fx:id="sourceScrollPane1" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" pannable="true">
+                  <ScrollPane fx:id="processedImageViewImageView" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" pannable="true">
                      <content>
-                        <ImageView fx:id="sourceImageView1" pickOnBounds="true" preserveRatio="true" smooth="false" />
+                        <ImageView fx:id="processedImageView" pickOnBounds="true" preserveRatio="true" smooth="false" />
                      </content>
                   </ScrollPane>
                </content>
@@ -69,9 +69,9 @@
                   <Label fx:id="rleInfoLabel1" text="Info Label" />
                   <HBox alignment="CENTER_LEFT" spacing="8.0">
                      <children>
-                        <Label text="M: " />
+                        <Label text="M = " />
+                        <Label fx:id="mValue" text="1" />
                         <Slider fx:id="mSlider" blockIncrement="0.1" max="130.0" min="1.0" onKeyReleased="#mChanged" onMouseClicked="#mChanged" onMouseDragged="#mChanged" />
-                        <Label fx:id="mLabel" text="1" />
                      </children>
                   </HBox>
                </children>
@@ -81,8 +81,8 @@
                   <Label fx:id="rleInfoLabel" text="Info Label" />
                   <HBox alignment="CENTER_LEFT" spacing="8.0">
                      <children>
-                        <Button mnemonicParsing="false" onAction="#openRLEImage" prefHeight="27.0" text="Save Golomb Picture" />
-                        <Button layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#openRLEImage" prefHeight="27.0" text="Open Golomb Picture" />
+                        <Button mnemonicParsing="false" onAction="#saveGolombImage" prefHeight="27.0" text="Save Golomb Picture" />
+                        <Button layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#openGolombImage" prefHeight="27.0" text="Open Golomb Picture" />
                      </children>
                   </HBox>
                </children>
