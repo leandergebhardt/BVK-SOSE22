@@ -64,6 +64,9 @@ public class GolombAppController {
     private Label zoomLabel;
 
 	@FXML
+	private Slider zoomSlider;
+
+	@FXML
 	private Slider mSlider;
 
 	@FXML
@@ -101,6 +104,14 @@ public class GolombAppController {
 		}
 	}
 
+	@FXML
+	void zoomChanged() {
+		double zoomFactor = zoomSlider.getValue();
+		zoomLabel.setText(String.format("%.1f", zoomFactor));
+		zoom(sourceImageView, sourceScrollPane, zoomFactor);
+		zoom(processedImageView, rleScrollPane, zoomFactor);
+	}
+
 	private void getProcessType(ActionEvent actionEvent) {
 		String processType = myChoiceBox.getValue();
 
@@ -112,7 +123,9 @@ public class GolombAppController {
 		}
 		if(processType == "DPCM") {
 			messageLabel.setText("Switched to DPCM");
-			// TODO trigger image processing
+			greyScaleImage = Filter.greyScale(sourceImage, processedImage);
+			processedImage = Filter.dpcm(greyScaleImage, processedImage);
+			processedImage.setToView(processedImageView);
 		}
 	}
 

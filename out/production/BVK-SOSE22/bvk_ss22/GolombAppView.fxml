@@ -67,6 +67,17 @@
             <VBox layoutX="326.0" layoutY="78.0" spacing="5.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                <children>
                   <Label fx:id="rleInfoLabel1" text="Info Label" />
+                  <HBox minHeight="25.0" prefHeight="25.0" prefWidth="200.0">
+                     <children>
+                        <Label text="Zoom">
+                           <HBox.margin>
+                              <Insets />
+                           </HBox.margin>
+                        </Label>
+                        <Slider fx:id="zoomSlider" max="20.0" min="1.0" onKeyReleased="#zoomChanged" onMouseClicked="#zoomChanged" onMouseDragged="#zoomChanged" value="1.0" />
+                        <Label fx:id="zoomLabel" layoutX="10.0" layoutY="10.0" text="1.0" />
+                     </children>
+                  </HBox>
                   <HBox alignment="CENTER_LEFT" spacing="8.0">
                      <children>
                         <Label text="M = " />
