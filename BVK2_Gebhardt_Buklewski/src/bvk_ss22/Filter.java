@@ -29,29 +29,30 @@ public class Filter {
     }
 
     public static RasterImage dpcm(RasterImage src, RasterImage dst) {
-        for(int pos = 0; pos < src.argb.length; pos++) {
-                int pixel = src.argb[pos];
-                int previousPixel;
-                if(pos == 0){
-                    previousPixel = 128;
-                } else {
-                    previousPixel = src.argb[pos - 1];
-                }
+        for (int y = 0; y < src.height; y++) {
+            for (int x = 0; x < src.width; x++) {
 
-                int greyPixel = pixel & 0xff;
-                int greyPreviousPixel = previousPixel & 0xff;
+                int pos = y * src.width + x;
+                int S = src.argb[pos] & 0x000000ff;
+                    //prediction ist der Pixel davor
+                int P = (pos == 0) ? 128 : src.argb[pos-1] & 0x000000ff;
+                    //error == unterschied zwischen P und dem tatsächlichen Wert
+                double error = S - P;
+                double errorPic = error + 128;
+                if (errorPic > 255) errorPic = 255;
+                if (errorPic < 0) errorPic = 0;
 
-                int diff = greyPreviousPixel - greyPixel;
-                diff += 128;
+                dst.argb[pos] = (0xff <<24) |  (((int)errorPic) <<16) | (((int)errorPic) <<8) | (int)errorPic;
 
-                if(diff >= 255){ // clamping value from 0 - 255
-                    diff = 255;
-                }
-                if(diff < 0){
-                    diff = 0;
-                }
+                /*
+                double reconst = error + P;
 
-                dst.argb[pos] = (0xff << 24) | (diff << 16) | (diff << 8) | diff;
+                dst.argb[pos] = (0xff <<24) | ((int)reconst <<16) | ((int)reconst <<8) | (int)reconst;
+
+                mse += Math.pow((origImg.argb[pos]& 0xff - reconstructedImg.argb[pos] & 0xff), 2);
+
+                 */
+            }
         }
         return dst;
     }
