@@ -8,7 +8,7 @@ public class BitOutputStream {
 
     //Integer[] buffer;
     Integer[] buffer = new Integer[8];
-    public BitOutputStream (){
+    public BitOutputStream (OutputStream out){
         this.out = out;
 
     }
