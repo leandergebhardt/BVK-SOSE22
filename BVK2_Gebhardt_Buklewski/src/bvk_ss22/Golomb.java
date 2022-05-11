@@ -118,45 +118,32 @@ public class Golomb {
 	public static RasterImage decodeImage(DataInputStream in) throws IOException {
 		int width;
 		int height;
-		int numberOfColors;
-		int argb;
+		int modus;
+		int M;
 		BitInputStream inB = new BitInputStream(in);
 
 		// read width and height from DataInputStream
 		width = inB.read(16);
 		height = inB.read(16);
-		numberOfColors = in.readInt();
+		modus = inB.readByte();
+		M = inB.readByte();
 
-		int[] colors = new int[numberOfColors];  //color array
+		String textModus = "";
 
-		for(int i=0; i<numberOfColors; i++){
-			argb = in.readInt();
-			colors[i] = argb;
-		}
+		if(modus == 0) textModus = "Copy";
+		if(modus == 2) textModus = "DPCM";
+
+		System.out.println("_________________________________________________________________________________________");
+		System.out.println("width: " + width + " height: " + height);
+		System.out.println("Modus: " + modus + " (" + textModus +")");
+		System.out.println("M = " + M);
+		// System.out.println();
+		System.out.println("_________________________________________________________________________________________");
+
 
 
 		// create RasterImage to be returned
 		RasterImage image = new RasterImage(width, height);
-
-		// TODO: read remaining RLE data from DataInputStream and reconstruct image
-
-		int x = 0;										//pixel count
-		while(in.available()>0){						//solange wie datastream available
-
-			int index = in.readByte() & 0xff;			//wird farbe und
-			int lauflaenge = in.readByte() & 0xff;		//lauflänge gezogen
-			System.out.println("lauflänge decode: " + lauflaenge);
-
-				//lauflänge +1, da lauflänge 0 1 bedeutet
-				lauflaenge++;
-				//für die definierte lauflänge wird der pixel in der definierten farbe gefärbt und pixelcount +1
-
-					for (int i = 0; i < lauflaenge; i++) {
-						image.argb[x] = colors[index];
-						x++;
-					}
-
-			}
 
 		return image;
 	}

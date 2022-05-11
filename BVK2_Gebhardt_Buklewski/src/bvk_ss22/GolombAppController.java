@@ -190,7 +190,7 @@ public class GolombAppController {
 	public void openGolombImage() {
     	FileChooser fileChooser = new FileChooser();
     	fileChooser.setInitialDirectory(fileOpenPath);
-    	fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("RLE Images (*.run)", "*.run"));
+    	fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("RLE Images (*.gol)", "*.gol"));
     	File selectedFile = fileChooser.showOpenDialog(null);
     	if(selectedFile != null) {
     		golombImageFileSize = selectedFile.length();
