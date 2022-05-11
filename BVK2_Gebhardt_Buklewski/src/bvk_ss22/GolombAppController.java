@@ -98,7 +98,7 @@ public class GolombAppController {
 		myChoiceBox.setOnAction(this::getProcessType);
 		String processType = myChoiceBox.getValue();
 		if(processType == "Copy") {
-			greyScaleImage = Filter.greyScale(sourceImage, processedImage);
+			greyScaleImage = Filter.greyScale(sourceImage, greyScaleImage);
 			processedImage = Filter.copy(greyScaleImage, processedImage);
 			processedImage.setToView(processedImageView);
 		}
@@ -117,13 +117,13 @@ public class GolombAppController {
 
 		if(processType == "Copy") {
 			messageLabel.setText("Copy");
-			greyScaleImage = Filter.greyScale(sourceImage, processedImage);
+			greyScaleImage = Filter.greyScale(sourceImage, greyScaleImage);
 			processedImage = Filter.copy(greyScaleImage, processedImage);
 			processedImage.setToView(processedImageView);
 		}
 		if(processType == "DPCM") {
 			messageLabel.setText("Switched to DPCM");
-			greyScaleImage = Filter.greyScale(sourceImage, processedImage);
+			greyScaleImage = Filter.greyScale(sourceImage, greyScaleImage);
 			processedImage = Filter.dpcm(greyScaleImage, processedImage);
 			processedImage.setToView(processedImageView);
 		}
