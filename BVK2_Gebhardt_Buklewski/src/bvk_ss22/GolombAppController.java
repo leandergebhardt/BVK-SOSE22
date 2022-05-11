@@ -27,12 +27,22 @@ public class GolombAppController {
 	private String sourceFileName;
 	
 	private RasterImage processedImage;
+
+	private RasterImage golombImage;
 	private RasterImage greyScaleImage;
-	private long rleImageFileSize;
+	private long golombImageFileSize;
 
     @FXML
     private ImageView sourceImageView;
 
+	@FXML
+	private ImageView processedImageView;
+
+	@FXML
+	private ImageView golombImageView;
+
+	@FXML
+	private ScrollPane rleScrollPane;
     @FXML
     private ScrollPane sourceScrollPane;
 
@@ -49,19 +59,16 @@ public class GolombAppController {
 	private Label reprocessedInfoLabel;
 
     @FXML
-    private ImageView processedImageView;
-
-    @FXML
-    private ScrollPane rleScrollPane;
-
-    @FXML
-    private Label rleInfoLabel;
-
-    @FXML
     private Label messageLabel;
 
     @FXML
     private Label zoomLabel;
+
+	@FXML
+	private Label mseLabel;
+
+	@FXML
+	private Label sizeLabel;
 
 	@FXML
 	private Slider zoomSlider;
@@ -75,7 +82,7 @@ public class GolombAppController {
 	@FXML
 	private ChoiceBox<String> myChoiceBox;
 
-	private String[] processTypes = {"Copy", "DPCM"};
+	private String[] processTypes = {"Copy", "DPCM horizontal"};
 
     @FXML
     void openImage() {
@@ -121,12 +128,13 @@ public class GolombAppController {
 			processedImage = Filter.copy(greyScaleImage, processedImage);
 			processedImage.setToView(processedImageView);
 		}
-		if(processType == "DPCM") {
+		if(processType == "DPCM horizontal") {
 			messageLabel.setText("Switched to DPCM");
 			greyScaleImage = Filter.greyScale(sourceImage, greyScaleImage);
 			processedImage = Filter.dpcm(greyScaleImage, processedImage);
 			processedImage.setToView(processedImageView);
 		}
+		// Todo set Labels for MSE and File Size
 	}
 
 	@FXML
@@ -150,12 +158,12 @@ public class GolombAppController {
 	}
 	
 	private void compareImages() {
-		if(sourceImage.argb.length != processedImage.argb.length || rleImageFileSize == 0) {
-			rleInfoLabel.setText("");
+		if(sourceImage.argb.length != processedImage.argb.length || golombImageFileSize == 0) {
+			mseLabel.setText("");
 			return;
 		}
 		double mse = processedImage.getMSEfromComparisonTo(sourceImage);
-		rleInfoLabel.setText(String.format("MSE = %.1f", mse));
+		mseLabel.setText(String.format("MSE = %.1f", mse));
 	}
 	
 	@FXML
@@ -169,7 +177,7 @@ public class GolombAppController {
     		try {
     			DataOutputStream ouputStream = new DataOutputStream(new FileOutputStream(selectedFile));
     			long startTime = System.currentTimeMillis();
-    			RLE.encodeImage(sourceImage, ouputStream);
+    			Golomb.encodeImage(sourceImage, ouputStream);
     			long time = System.currentTimeMillis() - startTime;
     			messageLabel.setText("Encoding in " + time + " ms");
     		} catch (Exception e) {
@@ -185,14 +193,15 @@ public class GolombAppController {
     	fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("RLE Images (*.run)", "*.run"));
     	File selectedFile = fileChooser.showOpenDialog(null);
     	if(selectedFile != null) {
-    		rleImageFileSize = selectedFile.length();
+    		golombImageFileSize = selectedFile.length();
     		try {
     			DataInputStream inputStream = new DataInputStream(new FileInputStream(selectedFile));
     			long startTime = System.currentTimeMillis();
-    			processedImage = RLE.decodeImage(inputStream);
+    			golombImage = Golomb.decodeImage(inputStream);
     			long time = System.currentTimeMillis() - startTime;
     			messageLabel.setText("Decoding in " + time + " ms");
-    			processedImage.setToView(processedImageView);
+    			golombImage.setToView(processedImageView);
+				sizeLabel.setText("" + golombImageFileSize + "");
     			compareImages();
     		} catch (Exception e) {
     			e.printStackTrace();

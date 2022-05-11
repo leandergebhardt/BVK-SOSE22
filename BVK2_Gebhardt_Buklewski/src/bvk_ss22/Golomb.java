@@ -6,17 +6,14 @@
 
 package bvk_ss22;
 
-import com.sun.org.apache.bcel.internal.generic.NEWARRAY;
-
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 
-public class RLE {
+public class Golomb {
 	
 	public static void encodeImage(RasterImage image, DataOutputStream out) throws IOException {
 
@@ -123,11 +120,11 @@ public class RLE {
 		int height;
 		int numberOfColors;
 		int argb;
-
+		BitInputStream inB = new BitInputStream(in);
 
 		// read width and height from DataInputStream
-		width = in.readInt();
-		height = in.readInt();
+		width = inB.read(16);
+		height = inB.read(16);
 		numberOfColors = in.readInt();
 
 		int[] colors = new int[numberOfColors];  //color array

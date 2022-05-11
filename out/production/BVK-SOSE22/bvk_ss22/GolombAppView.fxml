@@ -89,7 +89,8 @@
             </VBox>
             <VBox spacing="5.0" GridPane.columnIndex="2" GridPane.rowIndex="1">
                <children>
-                  <Label fx:id="rleInfoLabel" text="Info Label" />
+                  <Label fx:id="mseLabel" text="MSE" />
+                  <Label fx:id="sizeLabel" layoutX="10.0" layoutY="10.0" text="Size" />
                   <HBox alignment="CENTER_LEFT" spacing="8.0">
                      <children>
                         <Button mnemonicParsing="false" onAction="#saveGolombImage" prefHeight="27.0" text="Save Golomb Picture" />

@@ -43,15 +43,6 @@ public class Filter {
                 if (errorPic < 0) errorPic = 0;
 
                 dst.argb[pos] = (0xff <<24) |  (((int)errorPic) <<16) | (((int)errorPic) <<8) | (int)errorPic;
-
-
-                //double reconst = error + P;
-
-                //dst.argb[pos] = (0xff <<24) | ((int)reconst <<16) | ((int)reconst <<8) | (int)reconst;
-
-                //mse += Math.pow((origImg.argb[pos]& 0xff - reconstructedImg.argb[pos] & 0xff), 2);
-
-
             }
         }
         return dst;
