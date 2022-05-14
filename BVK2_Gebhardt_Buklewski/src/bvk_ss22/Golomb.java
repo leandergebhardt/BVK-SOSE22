@@ -16,6 +16,10 @@ public class Golomb {
 	public static int getM() {
 		return M;
 	}
+
+	public void setM(int M) {
+		this.M = M;
+	}
 	public static void encodeImage(RasterImage image, int mode, DataOutputStream out) throws IOException {
 
 		int width = image.width;
@@ -46,7 +50,7 @@ public class Golomb {
 
 		// calculate missing parameters
 		int b = (int) Math.ceil(Math.log(M));
-		double bound = Math.pow(2, b) - M;
+		int bound = (int) (Math.pow(2, b) - M);
 
 		String textModus = "";
 		if(modus == 0) textModus = "Copy";
@@ -56,39 +60,46 @@ public class Golomb {
 
 		for(int pos= 0; pos < result.argb.length; pos++) {
 			// inB lesen bis bit = 0
-			boolean zeroFound = false;
+			boolean notZero = true;
 			int qBits = 0;
 			int oneBitCounter = 0;
-			while (zeroFound) {
+			while (notZero) {
 				qBits = inB.read(1);
 				if (qBits == 0) {
-					zeroFound = true;
-					oneBitCounter++;
+					notZero = false;
 				}
+				oneBitCounter++;
 			}
 
 			// anzahl 1en = q
 			int q = oneBitCounter;
 
 			// b - 1 = anzahl weitere Bits lesen
-			int readMoreBits = b - 1;
+			int readBits = b - 1;
 
-			// if(zahl < bound r = 3 bit)
-			int num = inB.read(readMoreBits);
+			// if(zahl < bound read all calculated bits)
+			int num = inB.read(readBits);
 			if (num < bound) {
 
 			}
 
-			// if(zahl >= bound (r = 4 bit - bound))
+			// if(zahl >= bound -> read one more bit)
 			else if (num >= bound) {
-				inB.read(1);
+				num += inB.read(1);
 			}
-			System.out.println(q * M + num);
-			result.argb[pos] = q * M + num;
+
+			int pixel = q * M + num;
+			
+			// clamping
+			if(pixel > 255) pixel = 255;
+			if(pixel < 0) pixel = 0;
+
+			System.out.print(pixel + ", ");
+			result.argb[pos] = pixel;
 		}
 
 
-
+		System.out.println("");
 		System.out.println("_________________________________________________________________________________________");
 		System.out.println("width: " + width + " height: " + height);
 		System.out.println("Modus: " + modus + " (" + textModus +")");
