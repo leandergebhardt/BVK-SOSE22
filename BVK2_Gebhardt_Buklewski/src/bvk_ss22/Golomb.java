@@ -43,11 +43,14 @@ public class Golomb {
 
 		// calculate missing parameters
 		double b = Math.ceil(Math.log(M));
-		double l = Math.pow(2, b) - M;
+		double bound = Math.pow(2, b) - M;
 
 		String textModus = "";
 		if(modus == 0) textModus = "Copy";
 		if(modus == 2) textModus = "DPCM";
+
+		// inB lesen bis bit = 0
+		
 
 		System.out.println("_________________________________________________________________________________________");
 		System.out.println("width: " + width + " height: " + height);

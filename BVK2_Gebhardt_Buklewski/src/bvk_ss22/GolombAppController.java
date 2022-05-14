@@ -177,7 +177,7 @@ public class GolombAppController {
     		try {
     			DataOutputStream ouputStream = new DataOutputStream(new FileOutputStream(selectedFile));
     			long startTime = System.currentTimeMillis();
-    			Golomb.encodeImage(sourceImage, ouputStream);
+    			// Golomb.encodeImage(sourceImage, ouputStream);
     			long time = System.currentTimeMillis() - startTime;
     			messageLabel.setText("Encoding in " + time + " ms");
     		} catch (Exception e) {
@@ -190,7 +190,7 @@ public class GolombAppController {
 	public void openGolombImage() {
     	FileChooser fileChooser = new FileChooser();
     	fileChooser.setInitialDirectory(fileOpenPath);
-    	fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("RLE Images (*.gol)", "*.gol"));
+    	fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Golomb Images (*.gol)", "*.gol"));
     	File selectedFile = fileChooser.showOpenDialog(null);
     	if(selectedFile != null) {
     		golombImageFileSize = selectedFile.length();

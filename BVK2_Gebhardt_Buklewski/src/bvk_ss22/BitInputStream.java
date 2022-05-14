@@ -21,7 +21,7 @@ public class BitInputStream {
         int i;
         public int read(int bitNumber) throws IOException {
 
-                if(bufferCount==0) {
+                if(bufferCount == 0) {
                         i = in.read();
 
 
@@ -42,15 +42,14 @@ public class BitInputStream {
                 else{                                   //es sind noch zahlen im buffer
                         r=0;
                         rcount=0;
-                        while(bufferCount<8) {
-                                for (int x = bitNumber - 1; bufferCount<8; x--) {
+                        while(bufferCount < 8) {
+                                for (int x = bitNumber - 1; bufferCount < 8; x--) {
                                         r = r | (buffer[bufferCount] << x);
                                         rcount++;
                                         bufferCount++;
                                 }
-
                         }
-                        if(rcount!=bitNumber) {
+                        if(rcount != bitNumber) {
                                 i = in.read();
                                 count = 0;
                                 for (int x = 8; x > 0; x--) {           //neuen Buffer einlesen
