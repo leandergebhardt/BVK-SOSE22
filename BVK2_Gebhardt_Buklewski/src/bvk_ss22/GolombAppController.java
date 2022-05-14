@@ -200,7 +200,7 @@ public class GolombAppController {
     			golombImage = Golomb.decodeImage(inputStream);
     			long time = System.currentTimeMillis() - startTime;
     			messageLabel.setText("Decoding in " + time + " ms");
-    			golombImage.setToView(processedImageView);
+    			golombImage.setToView(golombImageView);
 				sizeLabel.setText("" + golombImageFileSize + "");
     			compareImages();
     		} catch (Exception e) {

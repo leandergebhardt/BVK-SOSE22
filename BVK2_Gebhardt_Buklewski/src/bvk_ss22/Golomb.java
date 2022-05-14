@@ -9,6 +9,8 @@ package bvk_ss22;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Golomb {
 	
@@ -38,19 +40,50 @@ public class Golomb {
 		// read parameters from DataInputStream
 		width = inB.read(16);
 		height = inB.read(16);
-		modus = inB.readByte();
-		M = inB.readByte();
+		modus = inB.read(8);
+		M = inB.read(8);
 
 		// calculate missing parameters
-		double b = Math.ceil(Math.log(M));
+		int b = (int) Math.ceil(Math.log(M));
 		double bound = Math.pow(2, b) - M;
 
 		String textModus = "";
 		if(modus == 0) textModus = "Copy";
 		if(modus == 2) textModus = "DPCM";
 
+		String result = Integer.toBinaryString(6);
+		System.out.println(result);
+		Pattern pattern = Pattern.compile("1");
+		Matcher m = pattern.matcher(result);
+
+		int count = 0;
+		if(m.find()) count++;
+		System.out.println("Found: " + count + " 1` in 110");
+
+		/*
 		// inB lesen bis bit = 0
-		
+			boolean zeroFound = false;
+			int qBits = 0;
+			while(zeroFound) {
+				qBits = inB.read(1);
+				if(qBits == 0) zeroFound = true;
+			}
+			String result = Integer.toBinaryString(qBits);
+			Pattern pattern = Pattern.compile("1");
+			Matcher m = pattern.matcher(result);
+
+			int count = 0;
+			if(m.find()) count++;
+
+		// anzahl 1en = q
+			int q = count;
+
+		// b - 1 = anzahl weitere Bits lesen
+			int readMoreBits = b - 1;
+
+		 */
+		// if(zahl < bound r = 3 bit)
+		// if(zahl >= bound (r = 4 bit - bound))
 
 		System.out.println("_________________________________________________________________________________________");
 		System.out.println("width: " + width + " height: " + height);
@@ -61,7 +94,7 @@ public class Golomb {
 
 
 
-		// create RasterImage to be returned
+		// create RasterImage to be eturned
 		RasterImage image = new RasterImage(width, height);
 
 		return image;
