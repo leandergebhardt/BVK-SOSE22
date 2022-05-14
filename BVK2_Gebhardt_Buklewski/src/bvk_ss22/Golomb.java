@@ -74,30 +74,23 @@ public class Golomb {
 			// anzahl 1en = q
 			int q = oneBitCounter;
 
-			// b - 1 = anzahl weitere Bits lesen
+			// b - 1 = anzahl weitere zu lesende Bits berechnen
 			int readBits = b - 1;
 
-			// if(zahl < bound read all calculated bits)
+			// if(zahl >= bound ein weiteres bit lesen)
 			int num = inB.read(readBits);
-			if (num < bound) {
-
-			}
-
-			// if(zahl >= bound -> read one more bit)
-			else if (num >= bound) {
-				num += inB.read(1);
+			if (num >= bound) {
+				int numWithNextBit = num << 1 | inB.read(1);
+				num = numWithNextBit - bound;
 			}
 
 			int pixel = q * M + num;
-			
+
 			// clamping
 			if(pixel > 255) pixel = 255;
 			if(pixel < 0) pixel = 0;
 
 			System.out.print(pixel + ", ");
-
-			
-
 			result.argb[pos] = (0xff << 24) | (pixel << 16) | (pixel << 8) | pixel;
 		}
 

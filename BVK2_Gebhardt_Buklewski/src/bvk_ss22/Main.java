@@ -5,18 +5,18 @@
 // Date: 2021-03-24
 
 package bvk_ss22;
-	
+
+import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.scene.layout.BorderPane;
+import javafx.stage.Stage;
+
 import java.io.File;
 import java.io.InputStream;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
-
-import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.stage.Stage;
-import javafx.scene.Scene;
-import javafx.scene.layout.BorderPane;
 
 
 public class Main extends Application {
@@ -25,7 +25,7 @@ public class Main extends Application {
 		BorderPane root = (BorderPane)loadFXML("GolombAppView.fxml");
 		Scene scene = new Scene(root);
 		primaryStage.setScene(scene);
-		primaryStage.setTitle("RLE Application - SS2022 - <Leander Gebhardt & Karl Buklewski>");
+		primaryStage.setTitle("Golomb Application - SS2022 - <Leander Gebhardt & Karl Buklewski>");
 		primaryStage.show();
 	}
 	
