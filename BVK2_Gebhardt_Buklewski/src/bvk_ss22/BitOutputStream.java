@@ -38,8 +38,6 @@ public class BitOutputStream {
                 out.write(r);
             }
         }
-
-
     }
 
     public void close() throws IOException {

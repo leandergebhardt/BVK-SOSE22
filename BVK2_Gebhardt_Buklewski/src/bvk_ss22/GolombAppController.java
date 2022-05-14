@@ -41,10 +41,14 @@ public class GolombAppController {
 	@FXML
 	private ImageView golombImageView;
 
-	@FXML
-	private ScrollPane rleScrollPane;
     @FXML
     private ScrollPane sourceScrollPane;
+
+	@FXML
+	private ScrollPane processedImageScrollPane;
+
+	@FXML
+	private ScrollPane golombScrollPane;
 
     @FXML
     private Label sourceInfoLabel;
@@ -116,7 +120,8 @@ public class GolombAppController {
 		double zoomFactor = zoomSlider.getValue();
 		zoomLabel.setText(String.format("%.1f", zoomFactor));
 		zoom(sourceImageView, sourceScrollPane, zoomFactor);
-		zoom(processedImageView, rleScrollPane, zoomFactor);
+		zoom(processedImageView, processedImageScrollPane, zoomFactor);
+		zoom(golombImageView, golombScrollPane, zoomFactor);
 	}
 
 	private void getProcessType(ActionEvent actionEvent) {
@@ -142,7 +147,11 @@ public class GolombAppController {
     	double M = mSlider.getValue();
 		int m = (int) Math.floor(M);
 		mValue.setText(""+ m +"");
-    	System.out.println(M);
+	}
+
+	private void setMSlider(int M) {
+		mSlider.setValue(M);
+		mValue.setText(""+ M +"");
 	}
 	
 	private void loadAndDisplayImage(File file) {
@@ -194,6 +203,7 @@ public class GolombAppController {
     	File selectedFile = fileChooser.showOpenDialog(null);
     	if(selectedFile != null) {
     		golombImageFileSize = selectedFile.length();
+			golombImageFileSize = golombImageFileSize / 1000;
     		try {
     			DataInputStream inputStream = new DataInputStream(new FileInputStream(selectedFile));
     			long startTime = System.currentTimeMillis();
@@ -201,7 +211,8 @@ public class GolombAppController {
     			long time = System.currentTimeMillis() - startTime;
     			messageLabel.setText("Decoding in " + time + " ms");
     			golombImage.setToView(golombImageView);
-				sizeLabel.setText("" + golombImageFileSize + "");
+				setMSlider(Golomb.getM());
+				sizeLabel.setText("" + golombImageFileSize + " KB");
     			compareImages();
     		} catch (Exception e) {
     			e.printStackTrace();

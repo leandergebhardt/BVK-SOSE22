@@ -9,11 +9,13 @@ package bvk_ss22;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class Golomb {
-	
+	public static int M;
+
+	public static int getM() {
+		return M;
+	}
 	public static void encodeImage(RasterImage image, int mode, DataOutputStream out) throws IOException {
 
 		int width = image.width;
@@ -34,7 +36,6 @@ public class Golomb {
 		int width;
 		int height;
 		int modus;
-		int M;
 		BitInputStream inB = new BitInputStream(in);
 
 		// read parameters from DataInputStream
@@ -51,39 +52,42 @@ public class Golomb {
 		if(modus == 0) textModus = "Copy";
 		if(modus == 2) textModus = "DPCM";
 
-		String result = Integer.toBinaryString(6);
-		System.out.println(result);
-		Pattern pattern = Pattern.compile("1");
-		Matcher m = pattern.matcher(result);
+		RasterImage result = new RasterImage(width, height);
 
-		int count = 0;
-		if(m.find()) count++;
-		System.out.println("Found: " + count + " 1` in 110");
-
-		/*
-		// inB lesen bis bit = 0
+		for(int pos= 0; pos < result.argb.length; pos++) {
+			// inB lesen bis bit = 0
 			boolean zeroFound = false;
 			int qBits = 0;
-			while(zeroFound) {
+			int oneBitCounter = 0;
+			while (zeroFound) {
 				qBits = inB.read(1);
-				if(qBits == 0) zeroFound = true;
+				if (qBits == 0) {
+					zeroFound = true;
+					oneBitCounter++;
+				}
 			}
-			String result = Integer.toBinaryString(qBits);
-			Pattern pattern = Pattern.compile("1");
-			Matcher m = pattern.matcher(result);
 
-			int count = 0;
-			if(m.find()) count++;
+			// anzahl 1en = q
+			int q = oneBitCounter;
 
-		// anzahl 1en = q
-			int q = count;
-
-		// b - 1 = anzahl weitere Bits lesen
+			// b - 1 = anzahl weitere Bits lesen
 			int readMoreBits = b - 1;
 
-		 */
-		// if(zahl < bound r = 3 bit)
-		// if(zahl >= bound (r = 4 bit - bound))
+			// if(zahl < bound r = 3 bit)
+			int num = inB.read(readMoreBits);
+			if (num < bound) {
+
+			}
+
+			// if(zahl >= bound (r = 4 bit - bound))
+			else if (num >= bound) {
+				inB.read(1);
+			}
+			System.out.println(q * M + num);
+			result.argb[pos] = q * M + num;
+		}
+
+
 
 		System.out.println("_________________________________________________________________________________________");
 		System.out.println("width: " + width + " height: " + height);
@@ -92,12 +96,7 @@ public class Golomb {
 		// System.out.println();
 		System.out.println("_________________________________________________________________________________________");
 
-
-
-		// create RasterImage to be eturned
-		RasterImage image = new RasterImage(width, height);
-
-		return image;
+		return result;
 	}
 
 }
