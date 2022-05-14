@@ -58,15 +58,20 @@ public class Golomb {
 
 		RasterImage result = new RasterImage(width, height);
 
+		// Rice Codierung
+		if(M == Math.pow(2, b)){
+			bound = 0;
+		}
+
 		for(int pos= 0; pos < result.argb.length; pos++) {
 			// inB lesen bis bit = 0
 			boolean notZero = true;
-			int qBits = 0;
+			int qBit;
 			int oneBitCounter = 0;
 			while (notZero) {
-				qBits = inB.read(1);
-				if (qBits == 0) {
-					notZero = false;
+				qBit = inB.read(1);
+				if (qBit == 0) {
+					break;
 				}
 				oneBitCounter++;
 			}
@@ -74,17 +79,22 @@ public class Golomb {
 			// anzahl 1en = q
 			int q = oneBitCounter;
 
-			// b - 1 = anzahl weitere zu lesende Bits berechnen
+			// b - 1 = anzahl zu lesender Bits berechnen
 			int readBits = b - 1;
 
-			// if(zahl >= bound ein weiteres bit lesen)
-			int num = inB.read(readBits);
-			if (num >= bound) {
-				int numWithNextBit = num << 1 | inB.read(1);
-				num = numWithNextBit - bound;
+			int r = 0;
+			int figure = inB.read(readBits);
+
+			// wenn zahl kleiner als grenze ist zahl auslesen
+			if(figure < bound) r = figure;
+
+			// if(zahl >= grenze ein weiteres bit lesen)
+			if (figure >= bound) {
+				int figureWithNextBit = figure << 1 | inB.read(1);
+				r = figureWithNextBit - bound;
 			}
 
-			int pixel = q * M + num;
+			int pixel = q * M + r;
 
 			// clamping
 			if(pixel > 255) pixel = 255;
