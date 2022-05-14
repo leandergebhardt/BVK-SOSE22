@@ -111,6 +111,7 @@ public class GolombAppController {
 		if(processType == "Copy") {
 			greyScaleImage = Filter.greyScale(sourceImage, greyScaleImage);
 			processedImage = Filter.copy(greyScaleImage, processedImage);
+
 			processedImage.setToView(processedImageView);
 		}
 	}
@@ -207,13 +208,14 @@ public class GolombAppController {
     		try {
     			DataInputStream inputStream = new DataInputStream(new FileInputStream(selectedFile));
     			long startTime = System.currentTimeMillis();
+				//golombImage = new RasterImage(sourceImage.width, sourceImage.height);
     			golombImage = Golomb.decodeImage(inputStream);
     			long time = System.currentTimeMillis() - startTime;
     			messageLabel.setText("Decoding in " + time + " ms");
     			golombImage.setToView(golombImageView);
 				setMSlider(Golomb.getM());
 				sizeLabel.setText("" + golombImageFileSize + " KB");
-    			compareImages();
+    			//compareImages();
     		} catch (Exception e) {
     			e.printStackTrace();
     		}

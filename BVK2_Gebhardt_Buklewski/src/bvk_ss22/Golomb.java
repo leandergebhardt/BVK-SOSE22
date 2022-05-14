@@ -95,7 +95,10 @@ public class Golomb {
 			if(pixel < 0) pixel = 0;
 
 			System.out.print(pixel + ", ");
-			result.argb[pos] = pixel;
+
+			
+
+			result.argb[pos] = (0xff << 24) | (pixel << 16) | (pixel << 8) | pixel;
 		}
 
 
