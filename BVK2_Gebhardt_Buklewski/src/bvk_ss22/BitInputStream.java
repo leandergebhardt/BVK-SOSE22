@@ -52,12 +52,6 @@ public class BitInputStream {
 
 
 
-
-
-
-
-
-
         public int readByte() throws IOException {
                 int r;
                 int rcount;
@@ -110,8 +104,6 @@ public class BitInputStream {
                                 }
                         }
                 }
-
-
 
                 return r;
         }

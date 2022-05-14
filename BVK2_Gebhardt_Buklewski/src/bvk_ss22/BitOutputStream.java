@@ -19,15 +19,11 @@ public class BitOutputStream {
 
     public void write(int value, int bitnumber) throws IOException {
 
-            //fillBuffer(value, bitnumber);
-
         for(int x = bitnumber-1; x >= 0; x--) {
             int bit = (value >> x) & 1;
             buffer[count] = bit;
             count++;
             bufferCount++;
-
-
 
             if (bufferCount == 8) {
                 int r = 0;
@@ -44,17 +40,6 @@ public class BitOutputStream {
         }
 
 
-    }
-
-    public void fillBuffer(int value, int bitnumber){
-        int count = 0;
-        for(int x = bitnumber-1; x >= 0; x--) {
-            int bit = (value >>x) & 1;
-            buffer[count] = bit;
-            count++;
-            bufferCount++;
-
-        }
     }
 
     public void close() throws IOException {
