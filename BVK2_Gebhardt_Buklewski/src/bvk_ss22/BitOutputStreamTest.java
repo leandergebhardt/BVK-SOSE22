@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import java.io.OutputStream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-
+/**
 class BitOutputStreamTest {
 
     private OutputStream out;
@@ -15,7 +15,7 @@ class BitOutputStreamTest {
     @BeforeEach
     public void initOut(){
         OutputStream s;
-        BitOutputStream out = new BitOutputStream(out);
+        OutputStream out = new BitOutputStream(out);
     }
 
     @Test
@@ -54,3 +54,4 @@ class BitOutputStreamTest {
         assertEquals(1,new BitOutputStream(out).write(1,1));
     }
 }
+ **/

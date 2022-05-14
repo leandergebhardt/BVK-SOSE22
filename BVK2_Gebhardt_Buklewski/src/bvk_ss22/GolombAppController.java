@@ -177,7 +177,7 @@ public class GolombAppController {
     		try {
     			DataOutputStream ouputStream = new DataOutputStream(new FileOutputStream(selectedFile));
     			long startTime = System.currentTimeMillis();
-    			Golomb.encodeImage(sourceImage, ouputStream);
+    			//Golomb.encodeImage(sourceImage, ouputStream);
     			long time = System.currentTimeMillis() - startTime;
     			messageLabel.setText("Encoding in " + time + " ms");
     		} catch (Exception e) {
