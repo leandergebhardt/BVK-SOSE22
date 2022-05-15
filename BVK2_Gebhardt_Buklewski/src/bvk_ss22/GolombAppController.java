@@ -31,6 +31,7 @@ public class GolombAppController {
 	private RasterImage golombImage;
 	private RasterImage greyScaleImage;
 	private long golombImageFileSize;
+	private long sourceSize;
 
     @FXML
     private ImageView sourceImageView;
@@ -52,6 +53,9 @@ public class GolombAppController {
 
     @FXML
     private Label sourceInfoLabel;
+
+	@FXML
+	private Label sourceFileSize;
 
 	@FXML
 	private ImageView reprocessedImageView;
@@ -157,6 +161,9 @@ public class GolombAppController {
 	
 	private void loadAndDisplayImage(File file) {
 		sourceFileName = file.getName();
+		sourceSize = file.length();
+		sourceSize = (long) Math.ceil(sourceSize / 1000);
+		sourceFileSize.setText("" + sourceSize +" KB");
 		messageLabel.setText("Opened image " + sourceFileName);
 		sourceImage = new RasterImage(file);
 		greyScaleImage = Filter.greyScale(sourceImage, sourceImage);

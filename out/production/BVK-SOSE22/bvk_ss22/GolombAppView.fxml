@@ -12,6 +12,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
 <BorderPane maxHeight="580.0" maxWidth="835.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="bvk_ss22.GolombAppController">
    <center>
@@ -55,7 +56,12 @@
             </TitledPane>
             <VBox spacing="5.0" GridPane.rowIndex="1">
                <children>
-                  <Label fx:id="sourceInfoLabel" text="Info Label" />
+                  <HBox prefHeight="15.0" prefWidth="200.0">
+                     <children>
+                        <Label fx:id="sourceInfoLabel" text="Info Label" />
+                     </children>
+                  </HBox>
+                  <Label fx:id="sourceFileSize" layoutX="10.0" layoutY="10.0" text="Info Label" />
                   <HBox spacing="10.0" VBox.vgrow="NEVER">
                      <children>
                         <Button mnemonicParsing="false" onAction="#openImage" prefHeight="27.0" text="Open Image" />
@@ -90,7 +96,10 @@
             <VBox spacing="5.0" GridPane.columnIndex="2" GridPane.rowIndex="1">
                <children>
                   <Label fx:id="mseLabel" text="MSE" />
-                  <Label fx:id="sizeLabel" layoutX="10.0" layoutY="10.0" text="Size" />
+                  <Label fx:id="sizeLabel" layoutX="10.0" layoutY="10.0" text="Filesize">
+                     <font>
+                        <Font name="System Bold" size="13.0" />
+                     </font></Label>
                   <HBox alignment="CENTER_LEFT" spacing="8.0">
                      <children>
                         <Button mnemonicParsing="false" onAction="#saveGolombImage" prefHeight="27.0" text="Save Golomb Picture" />
