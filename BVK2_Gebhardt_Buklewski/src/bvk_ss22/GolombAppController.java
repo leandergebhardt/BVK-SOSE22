@@ -178,16 +178,17 @@ public class GolombAppController {
 	
 	@FXML
 	public void saveGolombImage() {
+		String processType = myChoiceBox.getValue();
     	FileChooser fileChooser = new FileChooser();
     	fileChooser.setInitialDirectory(fileOpenPath);
-    	fileChooser.setInitialFileName(sourceFileName.substring(0, sourceFileName.lastIndexOf('.')) + ".run");
+    	if(processType == "Copy") fileChooser.setInitialFileName(sourceFileName.substring(0, sourceFileName.lastIndexOf('.')) + "_copy_encode");
+		if(processType == "DPCM horizontal") fileChooser.setInitialFileName(sourceFileName.substring(0, sourceFileName.lastIndexOf('.')) + "_DPCM_encode");
     	fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Golomb Images (*.gol)", "*.gol"));
     	File selectedFile = fileChooser.showSaveDialog(null);
     	if(selectedFile != null) {
     		try {
     			DataOutputStream ouputStream = new DataOutputStream(new FileOutputStream(selectedFile));
     			long startTime = System.currentTimeMillis();
-				String processType = myChoiceBox.getValue();
 				if(processType == "Copy") Golomb.encodeImage(processedImage, 0,ouputStream);
 				if(processType == "DPCM horizontal") Golomb.encodeImage(processedImage, 2, ouputStream);
     			long time = System.currentTimeMillis() - startTime;
