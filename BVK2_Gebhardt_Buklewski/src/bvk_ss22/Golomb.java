@@ -141,6 +141,7 @@ public class Golomb {
 				result.argb[pos] = (0xff << 24) | (pixel << 16) | (pixel << 8) | pixel;
 			}
 		}
+		int pixelBefore = 128;
 
 		if(modus == 2){ // DPMC horizontal codiert
 			for (int pos = 0; pos < result.argb.length; pos++) {
@@ -184,7 +185,10 @@ public class Golomb {
 
 				System.out.print(pixel + ", ");
 
-				pixel  += 128;
+					pixel = pixel + pixelBefore;
+					pixelBefore = pixel;
+
+				//pixel  += 128;
 
 				// clamping
 				if (pixel > 255) pixel = 255;
