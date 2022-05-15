@@ -81,8 +81,12 @@ public class Golomb {
 		M = inB.read(8);
 
 		// calculate missing parameters
-		int b = (int) (Math.log(M) / Math.log(2));
+		int b = (int) Math.ceil(Math.log(M) / Math.log(2));
+
+		System.out.println("M: " + M);
+		System.out.println("b: " + b);
 		int bound = (int) (Math.pow(2, b) - M);
+		System.out.println("bound: " + bound);
 
 		String textModus = "";
 		if(modus == 0) textModus = "Copy";
@@ -171,13 +175,13 @@ public class Golomb {
 				}
 
 				int pixel = q * M + r;
-				lastPixel[pos] = pixel;
 
-				if(pos % 2 == 0){ // even
-					if(pos != 0) pixel = lastPixel[pos - 1] * -1;
+				if(pixel % 2 == 0){ // even
+					pixel = pixel /2 ;
 				} else { // odd
-					pixel *= -1;
+					pixel = ((pixel +1)/2)*-1;
 				}
+
 				System.out.print(pixel + ", ");
 
 				pixel  += 128;
