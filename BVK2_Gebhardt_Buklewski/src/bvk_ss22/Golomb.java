@@ -17,9 +17,6 @@ public class Golomb {
 		return M;
 	}
 
-	public void setM(int M) {
-		this.M = M;
-	}
 	public static void encodeImage(RasterImage image, int modus, int M, DataOutputStream out) throws IOException {
 		int width = image.width;
 		int height = image.height;
@@ -33,7 +30,6 @@ public class Golomb {
 		if(modus == 0) textModus = "Copy";
 		if(modus == 2) textModus = "DPCM";
 
-		System.out.println(M);
 		outB.write(M, 8);
 		int b = (int) Math.ceil(Math.log(M) / Math.log(2));
 		int bound = (int) (Math.pow(2, b) - M);
@@ -42,7 +38,6 @@ public class Golomb {
 			int q;
 			int r;
 			int x = image.argb[pos] & 0x000000ff;
-
 
 			if(modus == 2) {
 				//x -= 128;
@@ -57,7 +52,7 @@ public class Golomb {
 			// quotienten berechnen
 			q = (int) Math.floor(x / M);
 
-			for(x=0; x<q; x++){
+			for(int ones =0; ones <=q; ones++){
 				outB.write(1,1);
 			}
 
@@ -72,17 +67,18 @@ public class Golomb {
 				outB.write(r, b - 1);
 			}
 			if(r >= bound){
-				outB.write(r, b);
+				outB.write(r + bound, b);
 			}
 		}
 
 		outB.close();
 
 		System.out.println("_________________________________________________________________________________________");
+		System.out.println("Finished Encoding");
 		System.out.println("width: " + width + " height: " + height);
 		System.out.println("Modus: " + modus + " (" + textModus +")");
 		System.out.println("M = " + M);
-		// System.out.println();
+		System.out.println(out.size() / 1000 + " KB");
 		System.out.println("_________________________________________________________________________________________");
 
 	}
@@ -156,7 +152,7 @@ public class Golomb {
 				if (pixel > 255) pixel = 255;
 				if (pixel < 0) pixel = 0;
 
-				System.out.print(pixel + ", ");
+				// System.out.print(pixel + ", ");
 				result.argb[pos] = (0xff << 24) | (pixel << 16) | (pixel << 8) | pixel;
 			}
 		}
