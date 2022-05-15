@@ -79,10 +79,13 @@ public class Golomb {
 		height = inB.read(16);
 		modus = inB.read(8);
 		M = inB.read(8);
-
+		System.out.println("M: " + M);
 		// calculate missing parameters
-		int b = (int) Math.ceil(Math.log(M));
+		int b = (int) (Math.log(M) / Math.log(2));
+		System.out.println("b: " + b);
+		
 		int bound = (int) (Math.pow(2, b) - M);
+		System.out.println("bound: " + bound);
 
 		String textModus = "";
 		if(modus == 0) textModus = "Copy";
