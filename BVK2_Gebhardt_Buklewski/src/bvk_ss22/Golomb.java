@@ -82,21 +82,20 @@ public class Golomb {
 
 		// calculate missing parameters
 		int b = (int) (Math.log(M) / Math.log(2));
-		
 		int bound = (int) (Math.pow(2, b) - M);
-		System.out.println("bound: " + bound);
 
 		String textModus = "";
 		if(modus == 0) textModus = "Copy";
 		if(modus == 2) textModus = "DPCM";
 
 		RasterImage result = new RasterImage(width, height);
+		int[] lastPixel = new int[result.argb.length];
 
 		// Rice Codierung
 		if(M == Math.pow(2, b)){
 			bound = 0;
 		}
-		if(modus == 0) {
+		if(modus == 0) { // Copy codiert
 			for (int pos = 0; pos < result.argb.length; pos++) {
 				// inB lesen bis bit = 0
 				boolean notZero = true;
@@ -138,8 +137,8 @@ public class Golomb {
 				result.argb[pos] = (0xff << 24) | (pixel << 16) | (pixel << 8) | pixel;
 			}
 		}
-		
-		if(modus == 2){
+
+		if(modus == 2){ // DPMC horizontal codiert
 			for (int pos = 0; pos < result.argb.length; pos++) {
 				// inB lesen bis bit = 0
 				boolean notZero = true;
@@ -172,11 +171,14 @@ public class Golomb {
 				}
 
 				int pixel = q * M + r;
-				if(pos % 2 == 0){ // even
+				lastPixel[pos] = pixel;
 
+				if(pos % 2 == 0){ // even
+					if(pos != 0) pixel = lastPixel[pos - 1] * -1;
 				} else { // odd
 					pixel *= -1;
 				}
+				System.out.print(pixel + ", ");
 
 				pixel  += 128;
 
@@ -184,7 +186,7 @@ public class Golomb {
 				if (pixel > 255) pixel = 255;
 				if (pixel < 0) pixel = 0;
 
-				System.out.print(pixel + ", ");
+				// System.out.print(pixel + ", ");
 				result.argb[pos] = (0xff << 24) | (pixel << 16) | (pixel << 8) | pixel;
 			}
 		}
