@@ -35,7 +35,7 @@ public class Golomb {
 
 		System.out.println(M);
 		outB.write(M, 8);
-		int b = (int) Math.ceil(Math.log(M));
+		int b = (int) Math.ceil(Math.log(M) / Math.log(2));
 		int bound = (int) (Math.pow(2, b) - M);
 
 		for(int pos = 0; pos < image.argb.length; pos++) {
@@ -58,6 +58,8 @@ public class Golomb {
 				outB.write(r, b);
 			}
 		}
+
+		outB.close();
 
 		System.out.println("_________________________________________________________________________________________");
 		System.out.println("width: " + width + " height: " + height);
