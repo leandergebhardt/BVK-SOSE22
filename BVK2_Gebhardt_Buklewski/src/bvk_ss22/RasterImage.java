@@ -81,7 +81,7 @@ public class RasterImage {
 		for(int x = 0; x < numberOfPixel; x++){
 			error += Math.pow(this.argb[x]-image.argb[x],2);
 		}
-		double mse = ((1/numberOfPixel)*error);
+		double mse = ((1.0/numberOfPixel)*error);
 		return mse;
 	}
 	

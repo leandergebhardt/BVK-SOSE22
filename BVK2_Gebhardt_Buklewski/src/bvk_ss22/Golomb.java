@@ -41,10 +41,27 @@ public class Golomb {
 		for(int pos = 0; pos < image.argb.length; pos++) {
 			int q;
 			int r;
-			int x = image.argb[pos];
+			int x = image.argb[pos] & 0x000000ff;
+
+
+			if(modus == 2) {
+				//x -= 128;
+				if (x > 0) {
+					x = x*2;
+				}
+				else{
+					x = ((x*-1)*2)-1;
+				}
+			}
+
 			// quotienten berechnen
 			q = (int) Math.floor(x / M);
-			outB.write(q, q);
+
+			for(x=0; x<q; x++){
+				outB.write(1,1);
+			}
+
+			outB.write(0, 1);
 			// TODO: add 0 at the end. How many bits to write?
 
 			// Rest berechnen

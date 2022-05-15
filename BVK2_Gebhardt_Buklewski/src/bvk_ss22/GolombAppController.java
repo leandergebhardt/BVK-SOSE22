@@ -179,7 +179,7 @@ public class GolombAppController {
 			mseLabel.setText("");
 			return;
 		}
-		double mse = processedImage.getMSEfromComparisonTo(sourceImage);
+		double mse = golombImage.getMSEfromComparisonTo(sourceImage);
 		mseLabel.setText(String.format("MSE = %.1f", mse));
 	}
 	
