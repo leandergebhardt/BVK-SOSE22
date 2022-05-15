@@ -79,10 +79,9 @@ public class Golomb {
 		height = inB.read(16);
 		modus = inB.read(8);
 		M = inB.read(8);
-		System.out.println("M: " + M);
+
 		// calculate missing parameters
 		int b = (int) (Math.log(M) / Math.log(2));
-		System.out.println("b: " + b);
 		
 		int bound = (int) (Math.pow(2, b) - M);
 		System.out.println("bound: " + bound);
@@ -97,46 +96,97 @@ public class Golomb {
 		if(M == Math.pow(2, b)){
 			bound = 0;
 		}
-
-		for(int pos= 0; pos < result.argb.length; pos++) {
-			// inB lesen bis bit = 0
-			boolean notZero = true;
-			int qBit;
-			int oneBitCounter = 0;
-			while (notZero) {
-				qBit = inB.read(1);
-				if (qBit == 0) {
-					break;
+		if(modus == 0) {
+			for (int pos = 0; pos < result.argb.length; pos++) {
+				// inB lesen bis bit = 0
+				boolean notZero = true;
+				int qBit;
+				int oneBitCounter = 0;
+				while (notZero) {
+					qBit = inB.read(1);
+					if (qBit == 0) {
+						break;
+					}
+					oneBitCounter++;
 				}
-				oneBitCounter++;
+
+				// anzahl 1en = q
+				int q = oneBitCounter;
+
+				// b - 1 = anzahl zu lesender Bits berechnen
+				int readBits = b - 1;
+
+				int r = 0;
+				int figure = inB.read(readBits);
+
+				// wenn zahl kleiner als grenze ist zahl auslesen
+				if (figure < bound) r = figure;
+
+				// if(zahl >= grenze ein weiteres bit lesen)
+				if (figure >= bound) {
+					int figureWithNextBit = figure << 1 | inB.read(1);
+					r = figureWithNextBit - bound;
+				}
+
+				int pixel = q * M + r;
+
+				// clamping
+				if (pixel > 255) pixel = 255;
+				if (pixel < 0) pixel = 0;
+
+				System.out.print(pixel + ", ");
+				result.argb[pos] = (0xff << 24) | (pixel << 16) | (pixel << 8) | pixel;
 			}
+		}
+		
+		if(modus == 2){
+			for (int pos = 0; pos < result.argb.length; pos++) {
+				// inB lesen bis bit = 0
+				boolean notZero = true;
+				int qBit;
+				int oneBitCounter = 0;
+				while (notZero) {
+					qBit = inB.read(1);
+					if (qBit == 0) {
+						break;
+					}
+					oneBitCounter++;
+				}
 
-			// anzahl 1en = q
-			int q = oneBitCounter;
+				// anzahl 1en = q
+				int q = oneBitCounter;
 
-			// b - 1 = anzahl zu lesender Bits berechnen
-			int readBits = b - 1;
+				// b - 1 = anzahl zu lesender Bits berechnen
+				int readBits = b - 1;
 
-			int r = 0;
-			int figure = inB.read(readBits);
+				int r = 0;
+				int figure = inB.read(readBits);
 
-			// wenn zahl kleiner als grenze ist zahl auslesen
-			if(figure < bound) r = figure;
+				// wenn zahl kleiner als grenze ist zahl auslesen
+				if (figure < bound) r = figure;
 
-			// if(zahl >= grenze ein weiteres bit lesen)
-			if (figure >= bound) {
-				int figureWithNextBit = figure << 1 | inB.read(1);
-				r = figureWithNextBit - bound;
+				// if(zahl >= grenze ein weiteres bit lesen)
+				if (figure >= bound) {
+					int figureWithNextBit = figure << 1 | inB.read(1);
+					r = figureWithNextBit - bound;
+				}
+
+				int pixel = q * M + r;
+				if(pos % 2 == 0){ // even
+
+				} else { // odd
+					pixel *= -1;
+				}
+
+				pixel  += 128;
+
+				// clamping
+				if (pixel > 255) pixel = 255;
+				if (pixel < 0) pixel = 0;
+
+				System.out.print(pixel + ", ");
+				result.argb[pos] = (0xff << 24) | (pixel << 16) | (pixel << 8) | pixel;
 			}
-
-			int pixel = q * M + r;
-
-			// clamping
-			if(pixel > 255) pixel = 255;
-			if(pixel < 0) pixel = 0;
-
-			System.out.print(pixel + ", ");
-			result.argb[pos] = (0xff << 24) | (pixel << 16) | (pixel << 8) | pixel;
 		}
 
 

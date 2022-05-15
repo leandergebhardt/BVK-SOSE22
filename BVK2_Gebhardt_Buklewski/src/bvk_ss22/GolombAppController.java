@@ -207,7 +207,7 @@ public class GolombAppController {
     	File selectedFile = fileChooser.showOpenDialog(null);
     	if(selectedFile != null) {
     		golombImageFileSize = selectedFile.length();
-			golombImageFileSize = golombImageFileSize / 1000;
+			golombImageFileSize = (long) Math.ceil(golombImageFileSize / 1000);
     		try {
     			DataInputStream inputStream = new DataInputStream(new FileInputStream(selectedFile));
     			long startTime = System.currentTimeMillis();
