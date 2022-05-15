@@ -187,7 +187,9 @@ public class GolombAppController {
     		try {
     			DataOutputStream ouputStream = new DataOutputStream(new FileOutputStream(selectedFile));
     			long startTime = System.currentTimeMillis();
-    			// Golomb.encodeImage(sourceImage, ouputStream);
+				String processType = myChoiceBox.getValue();
+				if(processType == "Copy") Golomb.encodeImage(processedImage, 0,ouputStream);
+				if(processType == "DPCM horizontal") Golomb.encodeImage(processedImage, 2, ouputStream);
     			long time = System.currentTimeMillis() - startTime;
     			messageLabel.setText("Encoding in " + time + " ms");
     		} catch (Exception e) {

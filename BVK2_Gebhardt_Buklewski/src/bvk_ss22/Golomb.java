@@ -20,17 +20,49 @@ public class Golomb {
 	public void setM(int M) {
 		this.M = M;
 	}
-	public static void encodeImage(RasterImage image, int mode, DataOutputStream out) throws IOException {
-
+	public static void encodeImage(RasterImage image, int modus, DataOutputStream out) throws IOException {
 		int width = image.width;
 		int height = image.height;
 		BitOutputStream outB = new BitOutputStream(out);
-		outB.write(8, mode);
+		outB.write(width, 16);
+		outB.write(height, 16);
+		outB.write(modus, 8);
+
+		String textModus = "";
+
+		if(modus == 0) textModus = "Copy";
+		if(modus == 2) textModus = "DPCM";
+
+		// TODO: calculate optimal M
+		outB.write(M, 8);
+		int b = (int) Math.ceil(Math.log(M));
+		int bound = (int) (Math.pow(2, b) - M);
+
+		for(int pos = 0; pos < image.argb.length; pos++) {
+			int q;
+			int r;
+			int x = image.argb[pos];
+			// quotienten berechnen
+			q = (int) Math.floor(x / M);
+			outB.write(q, q);
+			// TODO: add 0 at the end. How many bits to write?
+
+			// Rest berechnen
+			r = x - q * M;
+
+			// rest case behandlung
+			if(r < bound){
+				outB.write(r, b - 1);
+			}
+			if(r >= bound){
+				outB.write(r, b);
+			}
+		}
 
 		System.out.println("_________________________________________________________________________________________");
 		System.out.println("width: " + width + " height: " + height);
-		//System.out.println("Modus: " + modus + " (" + textModus +")");
-		//System.out.println("M = " + M);
+		System.out.println("Modus: " + modus + " (" + textModus +")");
+		System.out.println("M = " + M);
 		// System.out.println();
 		System.out.println("_________________________________________________________________________________________");
 
