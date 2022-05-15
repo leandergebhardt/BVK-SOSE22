@@ -57,7 +57,6 @@ public class Golomb {
 			}
 
 			outB.write(0, 1);
-			// TODO: add 0 at the end. How many bits to write?
 
 			// Rest berechnen
 			r = x - q * M;
