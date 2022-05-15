@@ -179,6 +179,7 @@ public class GolombAppController {
 	@FXML
 	public void saveGolombImage() {
 		String processType = myChoiceBox.getValue();
+		int M = (int) mSlider.getValue();
     	FileChooser fileChooser = new FileChooser();
     	fileChooser.setInitialDirectory(fileOpenPath);
     	if(processType == "Copy") fileChooser.setInitialFileName(sourceFileName.substring(0, sourceFileName.lastIndexOf('.')) + "_copy_encode");
@@ -189,8 +190,8 @@ public class GolombAppController {
     		try {
     			DataOutputStream ouputStream = new DataOutputStream(new FileOutputStream(selectedFile));
     			long startTime = System.currentTimeMillis();
-				if(processType == "Copy") Golomb.encodeImage(processedImage, 0,ouputStream);
-				if(processType == "DPCM horizontal") Golomb.encodeImage(processedImage, 2, ouputStream);
+				if(processType == "Copy") Golomb.encodeImage(processedImage, 0, M,ouputStream);
+				if(processType == "DPCM horizontal") Golomb.encodeImage(processedImage, 2, M, ouputStream);
     			long time = System.currentTimeMillis() - startTime;
     			messageLabel.setText("Encoding in " + time + " ms");
     		} catch (Exception e) {
@@ -218,7 +219,7 @@ public class GolombAppController {
     			golombImage.setToView(golombImageView);
 				setMSlider(Golomb.getM());
 				sizeLabel.setText("" + golombImageFileSize + " KB");
-    			//compareImages();
+    			compareImages();
     		} catch (Exception e) {
     			e.printStackTrace();
     		}

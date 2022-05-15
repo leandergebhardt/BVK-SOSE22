@@ -20,7 +20,7 @@ public class Golomb {
 	public void setM(int M) {
 		this.M = M;
 	}
-	public static void encodeImage(RasterImage image, int modus, DataOutputStream out) throws IOException {
+	public static void encodeImage(RasterImage image, int modus, int M, DataOutputStream out) throws IOException {
 		int width = image.width;
 		int height = image.height;
 		BitOutputStream outB = new BitOutputStream(out);
@@ -33,7 +33,7 @@ public class Golomb {
 		if(modus == 0) textModus = "Copy";
 		if(modus == 2) textModus = "DPCM";
 
-		// TODO: calculate optimal M
+		System.out.println(M);
 		outB.write(M, 8);
 		int b = (int) Math.ceil(Math.log(M));
 		int bound = (int) (Math.pow(2, b) - M);
@@ -183,12 +183,9 @@ public class Golomb {
 					pixel = ((pixel +1)/2)*-1;
 				}
 
-				System.out.print(pixel + ", ");
+				pixel = pixel + pixelBefore;
+				pixelBefore = pixel;
 
-					pixel = pixel + pixelBefore;
-					pixelBefore = pixel;
-
-				//pixel  += 128;
 
 				// clamping
 				if (pixel > 255) pixel = 255;
