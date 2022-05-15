@@ -40,8 +40,8 @@ public class Golomb {
 			int x = image.argb[pos] & 0x000000ff;
 
 			if(modus == 2) {
-				//x -= 128;
-				if (x > 0) {
+				x -= 128;
+				if (x >= 0) {
 					x = x*2;
 				}
 				else{
@@ -52,7 +52,7 @@ public class Golomb {
 			// quotienten berechnen
 			q = (int) Math.floor(x / M);
 
-			for(int ones =0; ones <=q; ones++){
+			for(int ones =0; ones <q; ones++){
 				outB.write(1,1);
 			}
 
