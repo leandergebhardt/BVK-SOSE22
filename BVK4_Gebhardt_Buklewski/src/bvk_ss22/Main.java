@@ -22,10 +22,10 @@ import java.net.URLClassLoader;
 public class Main extends Application {
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-		BorderPane root = (BorderPane)loadFXML("GolombAppView.fxml");
+		BorderPane root = (BorderPane)loadFXML("AriAppView.fxml");
 		Scene scene = new Scene(root);
 		primaryStage.setScene(scene);
-		primaryStage.setTitle("Golomb Application - SS2022 - <Leander Gebhardt & Karl Buklewski>");
+		primaryStage.setTitle("Arithmetic Encoding - SS2022 - <Leander Gebhardt & Karl Buklewski>");
 		primaryStage.show();
 	}
 	
