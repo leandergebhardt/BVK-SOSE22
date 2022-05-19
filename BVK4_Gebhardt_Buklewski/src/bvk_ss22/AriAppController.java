@@ -6,7 +6,6 @@
 
 package bvk_ss22;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
@@ -18,9 +17,9 @@ import javafx.stage.FileChooser;
 
 import java.io.*;
 
-public class GolombAppController {
+public class AriAppController {
 
-	private static final String initialFileName = "./BVK2_Gebhardt_Buklewski/ara_klein.png";
+	private static final String initialFileName = "./BVK4_Gebhardt_Buklewski/rhino_part.png";
 	private static File fileOpenPath = new File(".");
 
 	private RasterImage sourceImage;
@@ -28,9 +27,9 @@ public class GolombAppController {
 	
 	private RasterImage processedImage;
 
-	private RasterImage golombImage;
-	private RasterImage greyScaleImage;
-	private long golombImageFileSize;
+	private RasterImage decodedImage;
+	private RasterImage bitonarImage;
+	private long decodedImageFileSize;
 	private long sourceSize;
 
     @FXML
@@ -40,7 +39,7 @@ public class GolombAppController {
 	private ImageView processedImageView;
 
 	@FXML
-	private ImageView golombImageView;
+	private ImageView decodedImageView;
 
     @FXML
     private ScrollPane sourceScrollPane;
@@ -49,7 +48,7 @@ public class GolombAppController {
 	private ScrollPane processedImageScrollPane;
 
 	@FXML
-	private ScrollPane golombScrollPane;
+	private ScrollPane decodedScrollPane;
 
     @FXML
     private Label sourceInfoLabel;
@@ -82,15 +81,13 @@ public class GolombAppController {
 	private Slider zoomSlider;
 
 	@FXML
-	private Slider mSlider;
+	private Slider kSlider;
 
 	@FXML
-	private Label mValue;
+	private Label kValue;
 
 	@FXML
 	private ChoiceBox<String> myChoiceBox;
-
-	private String[] processTypes = {"Copy", "DPCM horizontal"};
 
     @FXML
     void openImage() {
@@ -108,16 +105,7 @@ public class GolombAppController {
 	@FXML
 	public void initialize() {
 		loadAndDisplayImage(new File(initialFileName));
-		myChoiceBox.getItems().addAll(processTypes);
-		myChoiceBox.setValue(processTypes[0]);
-		myChoiceBox.setOnAction(this::getProcessType);
-		String processType = myChoiceBox.getValue();
-		if(processType == "Copy") {
-			greyScaleImage = Filter.greyScale(sourceImage, greyScaleImage);
-			processedImage = Filter.copy(greyScaleImage, processedImage);
-
-			processedImage.setToView(processedImageView);
-		}
+		// TODO: Convert to bitonal image
 	}
 
 	@FXML
@@ -126,37 +114,19 @@ public class GolombAppController {
 		zoomLabel.setText(String.format("%.1f", zoomFactor));
 		zoom(sourceImageView, sourceScrollPane, zoomFactor);
 		zoom(processedImageView, processedImageScrollPane, zoomFactor);
-		zoom(golombImageView, golombScrollPane, zoomFactor);
-	}
-
-	private void getProcessType(ActionEvent actionEvent) {
-		String processType = myChoiceBox.getValue();
-
-		if(processType == "Copy") {
-			messageLabel.setText("Copy");
-			greyScaleImage = Filter.greyScale(sourceImage, greyScaleImage);
-			processedImage = Filter.copy(greyScaleImage, processedImage);
-			processedImage.setToView(processedImageView);
-		}
-		if(processType == "DPCM horizontal") {
-			messageLabel.setText("Switched to DPCM");
-			greyScaleImage = Filter.greyScale(sourceImage, greyScaleImage);
-			processedImage = Filter.dpcm(greyScaleImage, processedImage);
-			processedImage.setToView(processedImageView);
-		}
-		// Todo set Labels for MSE and File Size
+		zoom(decodedImageView, decodedScrollPane, zoomFactor);
 	}
 
 	@FXML
-	void mChanged(){
-    	double M = mSlider.getValue();
+	void kChanged(){
+    	double M = kSlider.getValue();
 		int m = (int) Math.floor(M);
-		mValue.setText(""+ m +"");
+		kValue.setText(""+ m +"");
 	}
 
-	private void setMSlider(int M) {
-		mSlider.setValue(M);
-		mValue.setText(""+ M +"");
+	private void setKSlider(int M) {
+		kSlider.setValue(M);
+		kValue.setText(""+ M +"");
 	}
 	
 	private void loadAndDisplayImage(File file) {
@@ -166,8 +136,8 @@ public class GolombAppController {
 		sourceFileSize.setText("" + sourceSize +" KB");
 		messageLabel.setText("Opened image " + sourceFileName);
 		sourceImage = new RasterImage(file);
-		greyScaleImage = Filter.greyScale(sourceImage, sourceImage);
-		greyScaleImage.setToView(sourceImageView);
+		bitonarImage = Filter.greyScale(sourceImage, sourceImage);
+		bitonarImage.setToView(sourceImageView);
 		sourceInfoLabel.setText(sourceFileName);
 		processedImage = new RasterImage(sourceImage.width, sourceImage.height);
 		processedImage.setToView(processedImageView);
@@ -175,30 +145,27 @@ public class GolombAppController {
 	}
 	
 	private void compareImages() {
-		if(sourceImage.argb.length != processedImage.argb.length || golombImageFileSize == 0) {
+		if(sourceImage.argb.length != processedImage.argb.length || decodedImageFileSize == 0) {
 			mseLabel.setText("");
 			return;
 		}
-		double mse = golombImage.getMSEfromComparisonTo(sourceImage);
+		double mse = decodedImage.getMSEfromComparisonTo(sourceImage);
 		mseLabel.setText(String.format("MSE = %.1f", mse));
 	}
 	
 	@FXML
-	public void saveGolombImage() {
-		String processType = myChoiceBox.getValue();
-		int M = (int) mSlider.getValue();
+	public void saveCompressedImage() {
+		int M = (int) kSlider.getValue();
     	FileChooser fileChooser = new FileChooser();
     	fileChooser.setInitialDirectory(fileOpenPath);
-    	if(processType == "Copy") fileChooser.setInitialFileName(sourceFileName.substring(0, sourceFileName.lastIndexOf('.')) + "_copy_encode");
-		if(processType == "DPCM horizontal") fileChooser.setInitialFileName(sourceFileName.substring(0, sourceFileName.lastIndexOf('.')) + "_DPCM_encode");
+    	fileChooser.setInitialFileName(sourceFileName.substring(0, sourceFileName.lastIndexOf('.')) + "_copy_encode");
     	fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Golomb Images (*.gol)", "*.gol"));
     	File selectedFile = fileChooser.showSaveDialog(null);
     	if(selectedFile != null) {
     		try {
     			DataOutputStream ouputStream = new DataOutputStream(new FileOutputStream(selectedFile));
     			long startTime = System.currentTimeMillis();
-				if(processType == "Copy") Golomb.encodeImage(processedImage, 0, M,ouputStream);
-				if(processType == "DPCM horizontal") Golomb.encodeImage(processedImage, 2, M, ouputStream);
+				Ari.encodeImage(processedImage, 0, M,ouputStream);
     			long time = System.currentTimeMillis() - startTime;
     			messageLabel.setText("Encoding in " + time + " ms");
     		} catch (Exception e) {
@@ -208,24 +175,23 @@ public class GolombAppController {
 	}
 	
 	@FXML
-	public void openGolombImage() {
+	public void openCompressedImage() {
     	FileChooser fileChooser = new FileChooser();
     	fileChooser.setInitialDirectory(fileOpenPath);
-    	fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Golomb Images (*.gol)", "*.gol"));
+    	fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Golomb Images (*.ari)", "*.ari"));
     	File selectedFile = fileChooser.showOpenDialog(null);
     	if(selectedFile != null) {
-    		golombImageFileSize = selectedFile.length();
-			golombImageFileSize = (long) Math.ceil(golombImageFileSize / 1000);
+			decodedImageFileSize = selectedFile.length();
+			decodedImageFileSize = (long) Math.ceil(decodedImageFileSize / 1000);
     		try {
     			DataInputStream inputStream = new DataInputStream(new FileInputStream(selectedFile));
     			long startTime = System.currentTimeMillis();
-				//golombImage = new RasterImage(sourceImage.width, sourceImage.height);
-    			golombImage = Golomb.decodeImage(inputStream);
+				decodedImage = Ari.decodeImage(inputStream);
     			long time = System.currentTimeMillis() - startTime;
     			messageLabel.setText("Decoding in " + time + " ms");
-    			golombImage.setToView(golombImageView);
-				setMSlider(Golomb.getM());
-				sizeLabel.setText("" + golombImageFileSize + " KB");
+				decodedImage.setToView(decodedImageView);
+				setKSlider(Ari.getM());
+				sizeLabel.setText("" + decodedImageFileSize + " KB");
     			compareImages();
     		} catch (Exception e) {
     			e.printStackTrace();

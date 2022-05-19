@@ -12,8 +12,9 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<BorderPane maxHeight="580.0" maxWidth="835.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="bvk_ss22.GolombAppController">
+<BorderPane maxHeight="580.0" maxWidth="835.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="bvk_ss22.AriAppController">
    <center>
       <GridPane hgap="5.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" vgap="5.0" BorderPane.alignment="CENTER">
          <columnConstraints>
@@ -37,29 +38,33 @@
             </TitledPane>
             <TitledPane collapsible="false" layoutX="10.0" layoutY="10.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Reprocessed Image" GridPane.columnIndex="1">
                <content>
-                  <ScrollPane fx:id="processedImageViewImageView" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" pannable="true">
+                  <ScrollPane fx:id="processedImageScrollPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" pannable="true">
                      <content>
                         <ImageView fx:id="processedImageView" pickOnBounds="true" preserveRatio="true" smooth="false" />
                      </content>
                   </ScrollPane>
                </content>
             </TitledPane>
-            <TitledPane collapsible="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Golomb Image" GridPane.columnIndex="2">
+            <TitledPane collapsible="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Decoded Image" GridPane.columnIndex="2">
                <content>
-                  <ScrollPane fx:id="rleScrollPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" pannable="true">
+                  <ScrollPane fx:id="decodedScrollPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" pannable="true">
                      <content>
-                        <ImageView fx:id="rleImageView" pickOnBounds="true" preserveRatio="true" smooth="false" />
+                        <ImageView fx:id="decodedImageView" pickOnBounds="true" preserveRatio="true" smooth="false" />
                      </content>
                   </ScrollPane>
                </content>
             </TitledPane>
             <VBox spacing="5.0" GridPane.rowIndex="1">
                <children>
-                  <Label fx:id="sourceInfoLabel" text="Info Label" />
+                  <HBox prefHeight="15.0" prefWidth="200.0">
+                     <children>
+                        <Label fx:id="sourceInfoLabel" text="Info Label" />
+                     </children>
+                  </HBox>
+                  <Label fx:id="sourceFileSize" layoutX="10.0" layoutY="10.0" text="Info Label" />
                   <HBox spacing="10.0" VBox.vgrow="NEVER">
                      <children>
                         <Button mnemonicParsing="false" onAction="#openImage" prefHeight="27.0" text="Open Image" />
-                        <ChoiceBox id="modus_choice" fx:id="myChoiceBox" prefWidth="150.0" />
                      </children>
                   </HBox>
                </children>
@@ -67,22 +72,37 @@
             <VBox layoutX="326.0" layoutY="78.0" spacing="5.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                <children>
                   <Label fx:id="rleInfoLabel1" text="Info Label" />
+                  <HBox minHeight="25.0" prefHeight="25.0" prefWidth="200.0">
+                     <children>
+                        <Label text="Zoom">
+                           <HBox.margin>
+                              <Insets />
+                           </HBox.margin>
+                        </Label>
+                        <Slider fx:id="zoomSlider" max="20.0" min="1.0" onKeyReleased="#zoomChanged" onMouseClicked="#zoomChanged" onMouseDragged="#zoomChanged" value="1.0" />
+                        <Label fx:id="zoomLabel" layoutX="10.0" layoutY="10.0" text="1.0" />
+                     </children>
+                  </HBox>
                   <HBox alignment="CENTER_LEFT" spacing="8.0">
                      <children>
-                        <Label text="M = " />
-                        <Label fx:id="mValue" text="1" />
-                        <Slider fx:id="mSlider" blockIncrement="0.1" max="130.0" min="1.0" onKeyReleased="#mChanged" onMouseClicked="#mChanged" onMouseDragged="#mChanged" />
+                        <Label text="T = " />
+                        <Label fx:id="kValue" text="0" />
+                        <Slider fx:id="kSlider" blockIncrement="0.1" max="256.0" onKeyReleased="#kChanged" onMouseClicked="#kChanged" onMouseDragged="#kChanged" />
                      </children>
                   </HBox>
                </children>
             </VBox>
             <VBox spacing="5.0" GridPane.columnIndex="2" GridPane.rowIndex="1">
                <children>
-                  <Label fx:id="rleInfoLabel" text="Info Label" />
+                  <Label fx:id="mseLabel" text="MSE" />
+                  <Label fx:id="sizeLabel" layoutX="10.0" layoutY="10.0" text="Filesize">
+                     <font>
+                        <Font name="System Bold" size="13.0" />
+                     </font></Label>
                   <HBox alignment="CENTER_LEFT" spacing="8.0">
                      <children>
-                        <Button mnemonicParsing="false" onAction="#saveGolombImage" prefHeight="27.0" text="Save Golomb Picture" />
-                        <Button layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#openGolombImage" prefHeight="27.0" text="Open Golomb Picture" />
+                        <Button mnemonicParsing="false" onAction="#saveCompressedImage" prefHeight="27.0" text="Save Compressed" />
+                        <Button layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#openCompressedImage" prefHeight="27.0" text="Open Compressed" />
                      </children>
                   </HBox>
                </children>

@@ -25,10 +25,10 @@ public class Main extends Application {
 		BorderPane root = (BorderPane)loadFXML("AriAppView.fxml");
 		Scene scene = new Scene(root);
 		primaryStage.setScene(scene);
-		primaryStage.setTitle("Golomb Application - SS2022 - <Leander Gebhardt & Karl Buklewski>");
+		primaryStage.setTitle("Arithmetic Encoding - SS2022 - <Leander Gebhardt & Karl Buklewski>");
 		primaryStage.show();
 	}
-	//
+	
 	public static void main(String[] args) {
 		launch(args);
 	}
