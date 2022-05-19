@@ -28,7 +28,7 @@ public class Main extends Application {
 		primaryStage.setTitle("Golomb Application - SS2022 - <Leander Gebhardt & Karl Buklewski>");
 		primaryStage.show();
 	}
-	
+	//
 	public static void main(String[] args) {
 		launch(args);
 	}
