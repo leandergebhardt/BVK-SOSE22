@@ -25,10 +25,10 @@ public class AriAppController {
 	private RasterImage sourceImage;
 	private String sourceFileName;
 	
-	private RasterImage processedImage;
+	private RasterImage binarizedImage;
 
 	private RasterImage decodedImage;
-	private RasterImage bitonarImage;
+
 	private long decodedImageFileSize;
 	private long sourceSize;
 
@@ -105,7 +105,7 @@ public class AriAppController {
 	@FXML
 	public void initialize() {
 		loadAndDisplayImage(new File(initialFileName));
-		// TODO: Convert to bitonal image
+		kChanged();
 	}
 
 	@FXML
@@ -119,9 +119,11 @@ public class AriAppController {
 
 	@FXML
 	void kChanged(){
-    	double M = kSlider.getValue();
-		int m = (int) Math.floor(M);
-		kValue.setText(""+ m +"");
+    	double K = kSlider.getValue();
+		int k = (int) Math.floor(K);
+		kValue.setText(""+ k +"");
+		binarizedImage = Filter.binarize(sourceImage, binarizedImage, k);
+		binarizedImage.setToView(processedImageView);
 	}
 
 	private void setKSlider(int M) {
@@ -130,22 +132,22 @@ public class AriAppController {
 	}
 	
 	private void loadAndDisplayImage(File file) {
+		int K = (int) kSlider.getValue();
 		sourceFileName = file.getName();
 		sourceSize = file.length();
 		sourceSize = (long) Math.ceil(sourceSize / 1000);
 		sourceFileSize.setText("" + sourceSize +" KB");
 		messageLabel.setText("Opened image " + sourceFileName);
 		sourceImage = new RasterImage(file);
-		bitonarImage = Filter.greyScale(sourceImage, sourceImage);
-		bitonarImage.setToView(sourceImageView);
-		sourceInfoLabel.setText(sourceFileName);
-		processedImage = new RasterImage(sourceImage.width, sourceImage.height);
-		processedImage.setToView(processedImageView);
+		sourceImage.setToView(sourceImageView);
+		binarizedImage = new RasterImage(sourceImage.width, sourceImage.height);
+		binarizedImage = Filter.binarize(sourceImage, binarizedImage, K);
+		binarizedImage.setToView(processedImageView);
 		compareImages();
 	}
 	
 	private void compareImages() {
-		if(sourceImage.argb.length != processedImage.argb.length || decodedImageFileSize == 0) {
+		if(sourceImage.argb.length != binarizedImage.argb.length || decodedImageFileSize == 0) {
 			mseLabel.setText("");
 			return;
 		}
@@ -158,14 +160,14 @@ public class AriAppController {
 		int M = (int) kSlider.getValue();
     	FileChooser fileChooser = new FileChooser();
     	fileChooser.setInitialDirectory(fileOpenPath);
-    	fileChooser.setInitialFileName(sourceFileName.substring(0, sourceFileName.lastIndexOf('.')) + "_copy_encode");
-    	fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Golomb Images (*.gol)", "*.gol"));
+    	fileChooser.setInitialFileName(sourceFileName.substring(0, sourceFileName.lastIndexOf('.')) + "_encode");
+    	fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Golomb Images (*.ari)", "*.ari"));
     	File selectedFile = fileChooser.showSaveDialog(null);
     	if(selectedFile != null) {
     		try {
     			DataOutputStream ouputStream = new DataOutputStream(new FileOutputStream(selectedFile));
     			long startTime = System.currentTimeMillis();
-				Ari.encodeImage(processedImage, 0, M,ouputStream);
+				Ari.encodeImage(binarizedImage, 0, M,ouputStream);
     			long time = System.currentTimeMillis() - startTime;
     			messageLabel.setText("Encoding in " + time + " ms");
     		} catch (Exception e) {
@@ -178,7 +180,7 @@ public class AriAppController {
 	public void openCompressedImage() {
     	FileChooser fileChooser = new FileChooser();
     	fileChooser.setInitialDirectory(fileOpenPath);
-    	fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Golomb Images (*.ari)", "*.ari"));
+    	fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Arithmetic Images (*.ari)", "*.ari"));
     	File selectedFile = fileChooser.showOpenDialog(null);
     	if(selectedFile != null) {
 			decodedImageFileSize = selectedFile.length();
