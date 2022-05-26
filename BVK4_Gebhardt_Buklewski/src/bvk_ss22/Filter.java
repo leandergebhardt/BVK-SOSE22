@@ -28,22 +28,17 @@ public class Filter {
         return dst;
     }
 
-    public static RasterImage dpcm(RasterImage src, RasterImage dst) {
-        for (int y = 0; y < src.height; y++) {
-            for (int x = 0; x < src.width; x++) {
+    public static RasterImage binarize(RasterImage src, RasterImage dst, int t) {
+        for (int pos = 0; pos < src.argb.length; pos++) {
+            int newPixel = 0;
+            int thisPixel = src.argb[pos] & 0x000000ff;
 
-                int pos = y * src.width + x;
-                int S = src.argb[pos] & 0x000000ff;
-                    //prediction ist der Pixel davor
-                int P = (pos == 0) ? 128 : src.argb[pos-1] & 0x000000ff;
-                    //error == unterschied zwischen P und dem tatsächlichen Wert
-                double error = S - P;
-                double errorPic = error + 128;
-                if (errorPic > 255) errorPic = 255;
-                if (errorPic < 0) errorPic = 0;
-
-                dst.argb[pos] = (0xff <<24) |  (((int)errorPic) <<16) | (((int)errorPic) <<8) | (int)errorPic;
+            if(thisPixel < t){
+                newPixel = 0;
+            } else {
+                newPixel = 255;
             }
+            dst.argb[pos] = (0xff << 24) | (newPixel << 16) | (newPixel << 8) | newPixel;
         }
         return dst;
     }
