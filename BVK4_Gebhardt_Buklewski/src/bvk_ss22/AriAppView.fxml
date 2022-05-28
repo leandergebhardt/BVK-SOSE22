@@ -87,7 +87,7 @@
                      <children>
                         <Label text="T = " />
                         <Label fx:id="kValue" text="0" />
-                        <Slider fx:id="kSlider" blockIncrement="0.1" max="256.0" onKeyReleased="#kChanged" onMouseClicked="#kChanged" onMouseDragged="#kChanged" value="128.0" />
+                        <Slider fx:id="kSlider" blockIncrement="0.1" max="256.0" onKeyReleased="#kChanged" onMouseClicked="#kChanged" onMouseDragged="#kChanged" value="175.0" />
                      </children>
                   </HBox>
                </children>

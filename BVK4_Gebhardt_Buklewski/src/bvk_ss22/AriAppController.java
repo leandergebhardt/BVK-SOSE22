@@ -32,6 +32,8 @@ public class AriAppController {
 	private long decodedImageFileSize;
 	private long sourceSize;
 
+	private double p0;
+
     @FXML
     private ImageView sourceImageView;
 
@@ -167,7 +169,7 @@ public class AriAppController {
     		try {
     			DataOutputStream ouputStream = new DataOutputStream(new FileOutputStream(selectedFile));
     			long startTime = System.currentTimeMillis();
-				Ari.encodeImage(binarizedImage, 0, M,ouputStream);
+				Ari.encodeImage(binarizedImage, ouputStream);
     			long time = System.currentTimeMillis() - startTime;
     			messageLabel.setText("Encoding in " + time + " ms");
     		} catch (Exception e) {
@@ -187,8 +189,9 @@ public class AriAppController {
 			decodedImageFileSize = (long) Math.ceil(decodedImageFileSize / 1000);
     		try {
     			DataInputStream inputStream = new DataInputStream(new FileInputStream(selectedFile));
+				p0 = Ari.generateP0(binarizedImage);
     			long startTime = System.currentTimeMillis();
-				decodedImage = Ari.decodeImage(inputStream);
+				decodedImage = Ari.decodeImage(inputStream, p0);
     			long time = System.currentTimeMillis() - startTime;
     			messageLabel.setText("Decoding in " + time + " ms");
 				decodedImage.setToView(decodedImageView);
