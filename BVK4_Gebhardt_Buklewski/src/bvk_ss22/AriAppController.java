@@ -195,7 +195,6 @@ public class AriAppController {
     			long time = System.currentTimeMillis() - startTime;
     			messageLabel.setText("Decoding in " + time + " ms");
 				decodedImage.setToView(decodedImageView);
-				setKSlider(Ari.getM());
 				sizeLabel.setText("" + decodedImageFileSize + " KB");
     			compareImages();
     		} catch (Exception e) {

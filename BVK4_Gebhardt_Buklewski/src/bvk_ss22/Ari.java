@@ -11,11 +11,6 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 
 public class Ari {
-	public static int M;
-
-	public static int getM() {
-		return M;
-	}
 
 	public static void encodeImage(RasterImage image, DataOutputStream out) throws IOException {
 		int width = image.width;
@@ -30,19 +25,42 @@ public class Ari {
 		// double p0 = (double)valueForFileFormat / 0x4000;
 		outB.write(valueForFileFormat, 16);
 
-
-		double[] a = new double[2];
-		double[] b = new double[2];
+		// Intervalle initialisieren
+		double[] a = {0, 1};
+		double[] b = {0, 1};
 		a[0] = p0;
 		a[1] = 1 -p0;
 
-		b[0] = 0;
-		b[1] = 0;
+		System.out.println("b[0]= "+ b[0] + " b[1]= " + b[1]);
 
 		double reducedP0 = reduceAccuracy(p0);
 
+		// Schleife solange noch Symbole zu codieren
 		for(int i = 0; i < image.argb.length; i++){
 			int pixel = image.argb[i] & 0x000000ff;
+			boolean black = pixel == 0;
+
+			// a aktualisieren
+			// skalierung der Intervalle
+
+
+			// Innere Schleife
+			while(true){
+				// a in obere Hälfte von b
+				if(b[1] / 2 <= a[0] && a[1] <= b[1]){
+					outB.write(1, 1);
+					// TODO: aktualisiere b
+				}
+				// a in unterer Hälfte von b
+				else if(b[0] <= a[0] && a[1] <= b[1] / 2){
+					outB.write(0, 1);
+					// TODO: aktualisiere b
+				}
+				else {
+					break;
+				}
+
+			}
 		}
 
 		outB.close();
@@ -51,7 +69,6 @@ public class Ari {
 		System.out.println("Finished Encoding");
 		System.out.println("width: " + width + " height: " + height);
 		//System.out.println("Modus: " + modus );
-		//System.out.println("M = " + M);
 		System.out.println(out.size() / 1000 + " KB");
 		System.out.println("_________________________________________________________________________________________");
 
@@ -97,6 +114,22 @@ public class Ari {
 		System.out.println("p0 = " + p0);
 
 		return p0;
+	}
+
+	private static double[] scale(double[] a, double[] b){
+		// E1
+		if(a[0] <= 0 && a[1] <= 0.5){
+
+		}
+		// E2
+		else if(a[0] <= 0.5 && a[1] <= 1){
+
+		}
+		// E3
+		else if(a[0] <= 0.25 && a[0] <= 0.75){
+
+		}
+		return a;
 	}
 
 	private static double reduceAccuracy(double value){

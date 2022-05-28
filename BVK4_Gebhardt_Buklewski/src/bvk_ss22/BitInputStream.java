@@ -36,6 +36,8 @@ public class BitInputStream {
                         }
                 }
                 return r;
+
+                // TODO: Falls Datei zu Ende ist Nullen zurückgeben
         }
 
         public void fillBuffer() throws IOException {
