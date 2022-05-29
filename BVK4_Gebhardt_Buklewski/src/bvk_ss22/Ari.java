@@ -26,15 +26,16 @@ public class Ari {
 		outB.write(valueForFileFormat, 16);
 
 		// Intervalle initialisieren
-		double[] a = {0, 1};
-		double[] b = {0, 1};
+		double[] a = {0.0, 1.0};
+		double[] b = {0.0, 1.0};
 
         double reducedP0 = reduceAccuracy(p0);
 
-		System.out.println("b[0]= "+ b[0] + " b[1]= " + b[1]);
-
 		// Schleife solange noch Symbole zu codieren
 		for(int i = 0; i < image.argb.length; i++){
+
+            System.out.println("Pos " + i + ": a = ["+ a[0] + ", " + a[1] + "), b = [" + b[0] + ", " + b[1] + ")");
+
             // a aktualisieren
             a[0] = reducedP0;
             a[1] = 1 - reducedP0;
@@ -46,13 +47,13 @@ public class Ari {
             // schwarzer Pixel gelesen
             if(black){
                 // unteren Abschnitt a
+
             }
             // weißes Pixel gelesen
             else {
                 // oberen Abschnitt a
-            }
 
-            // obere Abschnitt da weißer Pixel
+            }
 
 			// TODO: skalierung der Intervalle
 
@@ -91,26 +92,58 @@ public class Ari {
 
 	}
 
-	public static RasterImage decodeImage(DataInputStream in, double p0) throws IOException {
+	public static RasterImage decodeImage(DataInputStream in) throws IOException {
 		BitInputStream inB = new BitInputStream(in);
 
 		int width = inB.read(16);
 		int height = inB.read(16);
 
+		int valueFromFileFormat = inB.read(16);
+		double p0 = (double)valueFromFileFormat / 0x4000;
+		System.out.println("p0 = "+ p0);
+
 		RasterImage result = new RasterImage(width, height);
 
-		int valueForFileFormat = (int)Math.round(p0 * 0x4000);
+        // Initialisieren der Anfangsintervalle
+		double[] a = {0.0, 1.0};
+		double[] b = {0.0, 1.0};
 
-		double[] intervallSeen = new double[2];
-		double[] intervallGenerated = new double[2];
-		intervallSeen[0] = p0;
-		intervallSeen[1] = 1 -p0;
+        for(int pos = 0; pos < result.argb.length; pos++){
+			System.out.println("Pos " + pos + ": a = ["+ a[0] + ", " + a[1] + "), b = [" + b[0] + ", " + b[1] + ")");
+
+			a[0] = p0;
+			a[1] = 1 -p0;
+			// Innere Schleife
+			while(true) {
+
+				// b im oberen Anteil von a
+				if () {
+					// Symbol W schreiben
+					int pixel = 255;
+					result.argb[pos] = (0xff << 24) | (pixel << 16) | (pixel << 8) | pixel;
+					// aktualisiere a
+
+					break;
+				}
+				// b im unteren Anteil von a
+				else if () {
+					// Symbol S schreiben
+					int pixel = 0;
+					result.argb[pos] = (0xff << 24) | (pixel << 16) | (pixel << 8) | pixel;
+					// aktualisiere a
+
+					break;
+				}
+				inB.read(1);
+				// aktualisiere b
+			}
+
+        }
+
 
 		System.out.println("");
 		System.out.println("_________________________________________________________________________________________");
 		System.out.println("width: " + width + " height: " + height);
-		//System.out.println("Modus: ");
-		//System.out.println("M = " + M);
 		// System.out.println();
 		System.out.println("_________________________________________________________________________________________");
 

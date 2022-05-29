@@ -189,9 +189,8 @@ public class AriAppController {
 			decodedImageFileSize = (long) Math.ceil(decodedImageFileSize / 1000);
     		try {
     			DataInputStream inputStream = new DataInputStream(new FileInputStream(selectedFile));
-				p0 = Ari.generateP0(binarizedImage);
     			long startTime = System.currentTimeMillis();
-				decodedImage = Ari.decodeImage(inputStream, p0);
+				decodedImage = Ari.decodeImage(inputStream);
     			long time = System.currentTimeMillis() - startTime;
     			messageLabel.setText("Decoding in " + time + " ms");
 				decodedImage.setToView(decodedImageView);
