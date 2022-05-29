@@ -28,20 +28,33 @@ public class Ari {
 		// Intervalle initialisieren
 		double[] a = {0, 1};
 		double[] b = {0, 1};
-		a[0] = p0;
-		a[1] = 1 -p0;
+
+        double reducedP0 = reduceAccuracy(p0);
 
 		System.out.println("b[0]= "+ b[0] + " b[1]= " + b[1]);
 
-		double reducedP0 = reduceAccuracy(p0);
-
 		// Schleife solange noch Symbole zu codieren
 		for(int i = 0; i < image.argb.length; i++){
-			int pixel = image.argb[i] & 0x000000ff;
+            // a aktualisieren
+            a[0] = reducedP0;
+            a[1] = 1 - reducedP0;
+
+            // Pixel lesen
+            int pixel = image.argb[i] & 0x000000ff;
 			boolean black = pixel == 0;
 
-			// a aktualisieren
-			// skalierung der Intervalle
+            // schwarzer Pixel gelesen
+            if(black){
+                // unteren Abschnitt a
+            }
+            // weißes Pixel gelesen
+            else {
+                // oberen Abschnitt a
+            }
+
+            // obere Abschnitt da weißer Pixel
+
+			// TODO: skalierung der Intervalle
 
 
 			// Innere Schleife
@@ -49,12 +62,16 @@ public class Ari {
 				// a in obere Hälfte von b
 				if(b[1] / 2 <= a[0] && a[1] <= b[1]){
 					outB.write(1, 1);
-					// TODO: aktualisiere b
+                    // obere Abschnitt von b
+                    b[0] = b[1] / 2;
+                    b[1] = b [1];
 				}
 				// a in unterer Hälfte von b
 				else if(b[0] <= a[0] && a[1] <= b[1] / 2){
 					outB.write(0, 1);
-					// TODO: aktualisiere b
+                    // unterer Abschnitt von b
+                    b[0] = b[0];
+                    b[1] = b[1] / 2;
 				}
 				else {
 					break;
