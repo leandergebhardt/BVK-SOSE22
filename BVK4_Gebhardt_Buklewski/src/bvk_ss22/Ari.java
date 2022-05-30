@@ -29,31 +29,31 @@ public class Ari {
 		double[] a = {0.0, 1.0};
 		double[] b = {0.0, 1.0};
 
-        double reducedP0 = reduceAccuracy(p0);
+		double reducedP0 = reduceAccuracy(p0);
 
 		// Schleife solange noch Symbole zu codieren
 		for(int i = 0; i < image.argb.length; i++){
 
-            System.out.println("Pos " + i + ": a = ["+ a[0] + ", " + a[1] + "), b = [" + b[0] + ", " + b[1] + ")");
+			System.out.println("Pos " + i + ": a = ["+ a[0] + ", " + a[1] + "), b = [" + b[0] + ", " + b[1] + ")");
 
-            // a aktualisieren
-            a[0] = reducedP0;
-            a[1] = 1 - reducedP0;
+			// a aktualisieren
+			a[0] = reducedP0;
+			a[1] = 1 - reducedP0;
 
-            // Pixel lesen
-            int pixel = image.argb[i] & 0x000000ff;
+			// Pixel lesen
+			int pixel = image.argb[i] & 0x000000ff;
 			boolean black = pixel == 0;
 
-            // schwarzer Pixel gelesen
-            if(black){
-                // unteren Abschnitt a
+			// schwarzer Pixel gelesen
+			if(black){
+				// unteren Abschnitt a
 
-            }
-            // weißes Pixel gelesen
-            else {
-                // oberen Abschnitt a
+			}
+			// weißes Pixel gelesen
+			else {
+				// oberen Abschnitt a
 
-            }
+			}
 
 			// TODO: skalierung der Intervalle
 
@@ -63,16 +63,16 @@ public class Ari {
 				// a in obere Hälfte von b
 				if(b[1] / 2 <= a[0] && a[1] <= b[1]){
 					outB.write(1, 1);
-                    // obere Abschnitt von b
-                    b[0] = b[1] / 2;
-                    b[1] = b [1];
+					// obere Abschnitt von b
+					b[0] = b[1] / 2;
+					b[1] = b [1];
 				}
 				// a in unterer Hälfte von b
 				else if(b[0] <= a[0] && a[1] <= b[1] / 2){
 					outB.write(0, 1);
-                    // unterer Abschnitt von b
-                    b[0] = b[0];
-                    b[1] = b[1] / 2;
+					// unterer Abschnitt von b
+					b[0] = b[0];
+					b[1] = b[1] / 2;
 				}
 				else {
 					break;
@@ -99,46 +99,56 @@ public class Ari {
 		int height = inB.read(16);
 
 		int valueFromFileFormat = inB.read(16);
-		double p0 = (double)valueFromFileFormat / 0x4000;
+		double p0 = (double)valueFromFileFormat / 0x4000; // wahrscheinlichkeit schwarz
 		System.out.println("p0 = "+ p0);
 
 		RasterImage result = new RasterImage(width, height);
 
-        // Initialisieren der Anfangsintervalle
-		double[] a = {0.0, 1.0};
-		double[] b = {0.0, 1.0};
+		// Initialisieren der Anfangsintervalle
+		double[] a = {0.0, 1.0}; //richtet sich nach wahrscheinlchkeit p0
+		double[] b = {0.0, 1.0}; // codierte Bitfolge
 
-        for(int pos = 0; pos < result.argb.length; pos++){
+
+
+		for(int pos = 0; pos < result.argb.length; pos++){
 			System.out.println("Pos " + pos + ": a = ["+ a[0] + ", " + a[1] + "), b = [" + b[0] + ", " + b[1] + ")");
 
-			a[0] = p0;
-			a[1] = 1 -p0;
+
 			// Innere Schleife
 			while(true) {
 
 				// b im oberen Anteil von a
-				if () {
+				if (b[0] >= a[1] && b[1] >= a[1]) {
 					// Symbol W schreiben
+					System.out.println("oberer Teil");
 					int pixel = 255;
 					result.argb[pos] = (0xff << 24) | (pixel << 16) | (pixel << 8) | pixel;
 					// aktualisiere a
-
+					a[0] = p0;
+					//a[1] = a[1];
 					break;
 				}
 				// b im unteren Anteil von a
-				else if () {
+				else if (b[0] < a[1] && b[1] < a[1]) {
 					// Symbol S schreiben
+					System.out.println("unterer Teil");
 					int pixel = 0;
 					result.argb[pos] = (0xff << 24) | (pixel << 16) | (pixel << 8) | pixel;
 					// aktualisiere a
+					//a[0] = 0;
+					a[1] = a[1] * p0;
 
 					break;
 				}
-				inB.read(1);
-				// aktualisiere b
-			}
 
-        }
+			}
+			// aktualisiere b
+			int bit = inB.read(1);
+			System.out.println("read a bit");
+			if(bit == 0){b[1] = b[1]*0.5;}
+			else{b[0] = b[0] + b[1]*0.5;}
+
+		}
 
 
 		System.out.println("");
