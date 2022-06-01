@@ -124,7 +124,7 @@ public class Ari {
 					int pixel = 255;
 					result.argb[pos] = (0xff << 24) | (pixel << 16) | (pixel << 8) | pixel;
 					// aktualisiere a
-					a[0] = p0;
+					a[0] = (a[1]-a[0])*p0;
 					//a[1] = a[1];
 					break;
 				}
@@ -136,17 +136,17 @@ public class Ari {
 					result.argb[pos] = (0xff << 24) | (pixel << 16) | (pixel << 8) | pixel;
 					// aktualisiere a
 					//a[0] = 0;
-					a[1] = a[1] * p0;
+					a[1] = a[0] + p0;
 
 					break;
 				}
-
+// aktualisiere b
+				int bit = inB.read(1);
+				System.out.println("read a bit");
+				if(bit == 0){b[1] = b[1]-((b[1]-b[0])*0.5);}
+				else{b[0] = (b[1]-b[0])*0.5;}
 			}
-			// aktualisiere b
-			int bit = inB.read(1);
-			System.out.println("read a bit");
-			if(bit == 0){b[1] = b[1]*0.5;}
-			else{b[0] = b[0] + b[1]*0.5;}
+
 
 		}
 
