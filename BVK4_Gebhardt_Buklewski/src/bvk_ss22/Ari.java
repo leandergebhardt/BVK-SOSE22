@@ -118,7 +118,7 @@ public class Ari {
 			while(true) {
 
 				// b im oberen Anteil von a
-				if (b[0] >= a[1]*p0 && b[1] >= a[1]) {
+				if (b[0] >= a[1]*p0 && b[1] <= a[1]) {
 					// Symbol W schreiben
 					//System.out.println("oberer Teil");
 					int pixel = 255;
@@ -129,7 +129,7 @@ public class Ari {
 					break;
 				}
 				// b im unteren Anteil von a
-				else if (b[0] < a[1] && b[1] < a[1]*p0) {
+				else if (b[0] < a[1] && b[1] < a[0]+(a[1]-a[0])*p0) {
 					// Symbol S schreiben
 					//System.out.println("unterer Teil");
 					int pixel = 0;
@@ -140,11 +140,12 @@ public class Ari {
 					a[1] = a[0]+ irgendwas;
 					break;
 				}
-// aktualisiere b
+				// aktualisiere b
 				int bit = inB.read(1);
 				System.out.println("read a bit");
-				if(bit == 0){b[1] = b[1]-((b[1]-b[0])*0.5);}
-				else{b[0] = (b[1]-b[0])*0.5;}
+				if(bit == 0){
+					b[1] = ((b[1]-b[0])*0.5);}
+				else{b[0] = ((b[1]-b[0])*0.5);}
 			}
 
 			scale(a,b);
