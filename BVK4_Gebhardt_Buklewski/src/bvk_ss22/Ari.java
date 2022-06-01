@@ -115,9 +115,8 @@ public class Ari {
 			a[1] = 1 -p0;
 			// Innere Schleife
 			while(true) {
-
 				// b im oberen Anteil von a
-				if () {
+				if (b[0] <= a[1] / 2 && b[1] <= a[1] && b[0] > a[0] && b[1] <= a[1]) {
 					// Symbol W schreiben
 					int pixel = 255;
 					result.argb[pos] = (0xff << 24) | (pixel << 16) | (pixel << 8) | pixel;
@@ -126,7 +125,7 @@ public class Ari {
 					break;
 				}
 				// b im unteren Anteil von a
-				else if () {
+				else if (b[0] <= a[1] / 2 && b[1] <= a[1] / 2 && b[0] > a[0] && b[1] <= a[1]) {
 					// Symbol S schreiben
 					int pixel = 0;
 					result.argb[pos] = (0xff << 24) | (pixel << 16) | (pixel << 8) | pixel;
