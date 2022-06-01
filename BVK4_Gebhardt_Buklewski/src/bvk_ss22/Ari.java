@@ -118,26 +118,26 @@ public class Ari {
 			while(true) {
 
 				// b im oberen Anteil von a
-				if (b[0] >= a[1] && b[1] >= a[1]) {
+				if (b[0] >= a[1]*p0 && b[1] >= a[1]) {
 					// Symbol W schreiben
-					System.out.println("oberer Teil");
+					//System.out.println("oberer Teil");
 					int pixel = 255;
 					result.argb[pos] = (0xff << 24) | (pixel << 16) | (pixel << 8) | pixel;
 					// aktualisiere a
-					a[0] = (a[1]-a[0])*p0;
-					//a[1] = a[1];
+					a[0] += (a[1]-a[0])*p0;
+
 					break;
 				}
 				// b im unteren Anteil von a
-				else if (b[0] < a[1] && b[1] < a[1]) {
+				else if (b[0] < a[1] && b[1] < a[1]*p0) {
 					// Symbol S schreiben
-					System.out.println("unterer Teil");
+					//System.out.println("unterer Teil");
 					int pixel = 0;
 					result.argb[pos] = (0xff << 24) | (pixel << 16) | (pixel << 8) | pixel;
 					// aktualisiere a
-					//a[0] = 0;
-					a[1] = a[0] + p0;
 
+					double irgendwas = (a[1]-a[0])*p0;
+					a[1] = a[0]+ irgendwas;
 					break;
 				}
 // aktualisiere b
@@ -146,6 +146,9 @@ public class Ari {
 				if(bit == 0){b[1] = b[1]-((b[1]-b[0])*0.5);}
 				else{b[0] = (b[1]-b[0])*0.5;}
 			}
+
+			scale(a,b);
+
 
 
 		}
@@ -176,18 +179,30 @@ public class Ari {
 		return p0;
 	}
 
-	private static double[] scale(double[] a, double[] b){
+	private static double[] scale(double[] a,double[] b){
 		// E1
-		if(a[0] <= 0 && a[1] <= 0.5){
+		if(0 <= a[0] && a[1] <= 0.5){
+			a[0] = a[0]*2;
+			a[1] = a[1]*2;
 
+			b[0] = b[0]*2;
+			b[1] = b[1]*2;
 		}
 		// E2
-		else if(a[0] <= 0.5 && a[1] <= 1){
+		else if(0.5 <= a[0] && a[1] <= 1){
+			a[0] = (a[0]-0.5)*2;
+			a[1] = (a[1]-0.5)*2;
 
+			b[0] = (b[0]-0.5)*2;
+			b[1] = (b[1]-0.5)*2;
 		}
 		// E3
-		else if(a[0] <= 0.25 && a[0] <= 0.75){
+		else if(0.25 <= a[0] && a[1] <= 0.75){
+			a[0] = (a[0]-0.25)*2;
+			a[1] = (a[1]-0.25)*2;
 
+			b[0] = (b[0]-0.25)*2;
+			b[1] = (b[1]-0.25)*2;
 		}
 		return a;
 	}
