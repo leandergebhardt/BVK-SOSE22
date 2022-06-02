@@ -113,13 +113,13 @@ public class Ari {
 		for(int pos = 0; pos < result.argb.length; pos++){
 			System.out.println("Pos " + pos + ": a = ["+ a[0] + ", " + a[1] + "), b = [" + b[0] + ", " + b[1] + ")");
 
-			// TODO: a = a
-			double grenze;
+			double devisionA = calculateDevision(a, p0);
+			double divisionB = calculateDevision(b, p0);
 			// Innere Schleife
 			while(true) {
 
 				// b im oberen Anteil von a
-				if (b[0] >= a[1]*p0 && b[1] <= a[1]) {
+				if (b[0] >= devisionA && b[1] <= a[1]) {
 					// Symbol W schreiben
 					//System.out.println("oberer Teil");
 					int pixel = 255;
@@ -130,7 +130,7 @@ public class Ari {
 					break;
 				}
 				// b im unteren Anteil von a
-				else if (b[0] < a[1] && b[1] < a[0]+(a[1]-a[0])*p0) {
+				else if (b[0] <= a[1] && b[1] <= devisionA) {
 					// Symbol S schreiben
 					//System.out.println("unterer Teil");
 					int pixel = 0;
@@ -214,8 +214,8 @@ public class Ari {
 		return Math.round(value * div) / div;
 	}
 
-	private static double calculateBorder(double[] a, double p0){
-
+	private static double calculateDevision(double[] a, double p0){
+		return (a[0] + p0) * (a[1] - a[0]);
 	}
 
 }
