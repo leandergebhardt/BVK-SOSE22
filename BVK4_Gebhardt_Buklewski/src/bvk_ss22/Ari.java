@@ -113,7 +113,8 @@ public class Ari {
 		for(int pos = 0; pos < result.argb.length; pos++){
 			System.out.println("Pos " + pos + ": a = ["+ a[0] + ", " + a[1] + "), b = [" + b[0] + ", " + b[1] + ")");
 
-
+			// TODO: a = a
+			double grenze;
 			// Innere Schleife
 			while(true) {
 
@@ -211,6 +212,10 @@ public class Ari {
 	private static double reduceAccuracy(double value){
 		final double div = 0x40000000;
 		return Math.round(value * div) / div;
+	}
+
+	private static double calculateBorder(double[] a, double p0){
+
 	}
 
 }
