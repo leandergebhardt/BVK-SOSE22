@@ -100,6 +100,7 @@ public class Ari {
 
 		double valueFromFileFormat = inB.read(16);
 		double p0 = (double)valueFromFileFormat / 0x4000; // wahrscheinlichkeit schwarz
+		p0 = reduceAccuracy(p0);
 		System.out.println("p0 = "+ p0);
 
 		RasterImage result = new RasterImage(width, height);
@@ -113,26 +114,26 @@ public class Ari {
 		for(int pos = 0; pos < result.argb.length; pos++){
 			System.out.println("Pos " + pos + ": a = ["+ a[0] + ", " + a[1] + "), b = [" + b[0] + ", " + b[1] + ")");
 
-			double divisionA = calculateDevision(a, p0);
-			double divisionB = calculateDevision(b, 0.5);
+			double divisionA = calculateDivision(a, p0);
+			double divisionB = calculateDivision(b, 0.5);
 			// Innere Schleife
 			while(true) {
 
 				// b im oberen Anteil von a
 				//if (b[0] >= divisionA && b[1] <= a[1]) {
-				if (b[0] >= calculateDevision(a, p0) && a[1] >= b[1]) {
+				if (b[0] >= calculateDivision(a, p0) && a[1] >= b[1]) {
 					// Symbol W schreiben
 					//System.out.println("oberer Teil");
 					int pixel = 255;
 					result.argb[pos] = (0xff << 24) | (pixel << 16) | (pixel << 8) | pixel;
 					// aktualisiere a
-					a[0] = calculateDevision(a, p0);
+					a[0] = calculateDivision(a, p0);
 
 					break;
 				}
 				// b im unteren Anteil von a
 				//else if (b[0] <= a[1] && b[1] < divisionA) {
-				else if (a[0]<= b[0] && b[1] <= calculateDevision(a, p0)) {
+				else if (a[0]<= b[0] && b[1] <= calculateDivision(a, p0)) {
 					// Symbol S schreiben
 					//System.out.println("unterer Teil");
 					int pixel = 0;
@@ -141,15 +142,15 @@ public class Ari {
 
 					//double irgendwas = (a[1]-a[0])*p0;
 					//a[1] = a[0]+ irgendwas;
-					a[1] = calculateDevision(a, p0);
+					a[1] = calculateDivision(a, p0);
 					break;
 				}
 				// aktualisiere b
 				int bit = inB.read(1);
 				System.out.println("read a bit");
 				if(bit == 0){
-					b[1] = calculateDevision(b, 0.5);;}
-				else{b[0] = calculateDevision(b, 0.5);;}
+					b[1] = calculateDivision(b, 0.5);;}
+				else{b[0] = calculateDivision(b, 0.5);;}
 			}
 
 			scale(a,b);
@@ -217,7 +218,7 @@ public class Ari {
 		return Math.round(value * div) / div;
 	}
 
-	private static double calculateDevision(double[] a, double p0){
+	private static double calculateDivision(double[] a, double p0){
 		double result = a[0] + ((a[1]-a[0])*p0);
 		//return (a[0] + p0) * (a[1] - a[0]);
 		return result;
