@@ -98,7 +98,7 @@ public class Ari {
 		int width = inB.read(16);
 		int height = inB.read(16);
 
-		int valueFromFileFormat = inB.read(16);
+		double valueFromFileFormat = inB.read(16);
 		double p0 = (double)valueFromFileFormat / 0x4000; // wahrscheinlichkeit schwarz
 		System.out.println("p0 = "+ p0);
 
@@ -113,40 +113,43 @@ public class Ari {
 		for(int pos = 0; pos < result.argb.length; pos++){
 			System.out.println("Pos " + pos + ": a = ["+ a[0] + ", " + a[1] + "), b = [" + b[0] + ", " + b[1] + ")");
 
-			double devisionA = calculateDevision(a, p0);
-			double divisionB = calculateDevision(b, p0);
+			double divisionA = calculateDevision(a, p0);
+			double divisionB = calculateDevision(b, 0.5);
 			// Innere Schleife
 			while(true) {
 
 				// b im oberen Anteil von a
-				if (b[0] >= devisionA && b[1] <= a[1]) {
+				//if (b[0] >= divisionA && b[1] <= a[1]) {
+				if (b[0] >= calculateDevision(a, p0) && a[1] >= b[1]) {
 					// Symbol W schreiben
 					//System.out.println("oberer Teil");
 					int pixel = 255;
 					result.argb[pos] = (0xff << 24) | (pixel << 16) | (pixel << 8) | pixel;
 					// aktualisiere a
-					a[0] += (a[1]-a[0])*p0;
+					a[0] = calculateDevision(a, p0);
 
 					break;
 				}
 				// b im unteren Anteil von a
-				else if (b[0] <= a[1] && b[1] <= devisionA) {
+				//else if (b[0] <= a[1] && b[1] < divisionA) {
+				else if (a[0]<= b[0] && b[1] <= calculateDevision(a, p0)) {
 					// Symbol S schreiben
 					//System.out.println("unterer Teil");
 					int pixel = 0;
 					result.argb[pos] = (0xff << 24) | (pixel << 16) | (pixel << 8) | pixel;
 					// aktualisiere a
 
-					double irgendwas = (a[1]-a[0])*p0;
-					a[1] = a[0]+ irgendwas;
+					//double irgendwas = (a[1]-a[0])*p0;
+					//a[1] = a[0]+ irgendwas;
+					a[1] = calculateDevision(a, p0);
 					break;
 				}
 				// aktualisiere b
 				int bit = inB.read(1);
 				System.out.println("read a bit");
 				if(bit == 0){
-					b[1] = ((b[1]-b[0])*0.5);}
-				else{b[0] = ((b[1]-b[0])*0.5);}
+					b[1] = calculateDevision(b, 0.5);;}
+				else{b[0] = calculateDevision(b, 0.5);;}
 			}
 
 			scale(a,b);
@@ -183,28 +186,28 @@ public class Ari {
 
 	private static double[] scale(double[] a,double[] b){
 		// E1
-		if(0 <= a[0] && a[1] <= 0.5){
-			a[0] = a[0]*2;
-			a[1] = a[1]*2;
+		if(0.0 <= a[0] && a[1] <= 0.5){
+			a[0] = a[0]*2.0;
+			a[1] = a[1]*2.0;
 
-			b[0] = b[0]*2;
-			b[1] = b[1]*2;
+			b[0] = b[0]*2.0;
+			b[1] = b[1]*2.0;
 		}
 		// E2
-		else if(0.5 <= a[0] && a[1] <= 1){
-			a[0] = (a[0]-0.5)*2;
-			a[1] = (a[1]-0.5)*2;
+		else if(0.5 <= a[0] && a[1] <= 1.0){
+			a[0] = (a[0]-0.5)*2.0;
+			a[1] = (a[1]-0.5)*2.0;
 
-			b[0] = (b[0]-0.5)*2;
-			b[1] = (b[1]-0.5)*2;
+			b[0] = (b[0]-0.5)*2.0;
+			b[1] = (b[1]-0.5)*2.0;
 		}
 		// E3
 		else if(0.25 <= a[0] && a[1] <= 0.75){
-			a[0] = (a[0]-0.25)*2;
-			a[1] = (a[1]-0.25)*2;
+			a[0] = (a[0]-0.25)*2.0;
+			a[1] = (a[1]-0.25)*2.0;
 
-			b[0] = (b[0]-0.25)*2;
-			b[1] = (b[1]-0.25)*2;
+			b[0] = (b[0]-0.25)*2.0;
+			b[1] = (b[1]-0.25)*2.0;
 		}
 		return a;
 	}
@@ -215,7 +218,9 @@ public class Ari {
 	}
 
 	private static double calculateDevision(double[] a, double p0){
-		return (a[0] + p0) * (a[1] - a[0]);
+		double result = a[0] + ((a[1]-a[0])*p0);
+		//return (a[0] + p0) * (a[1] - a[0]);
+		return result;
 	}
 
 }
