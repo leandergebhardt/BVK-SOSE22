@@ -118,7 +118,6 @@ public class Ari {
 			double divisionB = calculateDivision(b, 0.5);
 			// Innere Schleife
 			while(true) {
-
 				// b im oberen Anteil von a
 				//if (b[0] >= divisionA && b[1] <= a[1]) {
 				if (b[0] >= calculateDivision(a, p0) && a[1] >= b[1]) {
