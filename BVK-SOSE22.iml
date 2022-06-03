@@ -6,6 +6,7 @@
       <sourceFolder url="file://$MODULE_DIR$/BVK4_Gebhardt_Buklewski/src" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/BVK1_Gebhardt_Buklewski" />
       <excludeFolder url="file://$MODULE_DIR$/BVK1_Gebhardt_Buklewski/src" />
+      <excludeFolder url="file://$MODULE_DIR$/BVK2_Gebhardt_Buklewski" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
