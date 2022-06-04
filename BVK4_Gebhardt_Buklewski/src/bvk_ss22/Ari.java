@@ -99,8 +99,8 @@ public class Ari {
 		int height = inB.read(16);
 
 		double valueFromFileFormat = inB.read(16);
-		double p0 = (double)valueFromFileFormat / 0x4000; // wahrscheinlichkeit schwarz
-		p0 = reduceAccuracy(p0);
+		double p0 = valueFromFileFormat / 0x4000; // wahrscheinlichkeit schwarz
+		//p0 = reduceAccuracy(p0);
 		System.out.println("p0 = "+ p0);
 
 		RasterImage result = new RasterImage(width, height);
@@ -146,10 +146,15 @@ public class Ari {
 				}
 				// aktualisiere b
 				int bit = inB.read(1);
-				System.out.println("read a bit");
+				//System.out.println("read a bit");
 				if(bit == 0){
-					b[1] = calculateDivision(b, 0.5);;}
-				else{b[0] = calculateDivision(b, 0.5);;}
+					b[1] = calculateDivision(b, 0.5);
+				}
+				else{
+					b[0] = calculateDivision(b, 0.5);
+				}
+
+
 			}
 
 			scale(a,b);
@@ -185,29 +190,33 @@ public class Ari {
 	}
 
 	private static double[] scale(double[] a,double[] b){
-		// E1
-		if(0.0 <= a[0] && a[1] <= 0.5){
-			a[0] = a[0]*2.0;
-			a[1] = a[1]*2.0;
+		while(true) {
+			// E1
+			if (0.0 <= a[0] && a[1] <= 0.5) {
+				a[0] = a[0] * 2.0;
+				a[1] = a[1] * 2.0;
 
-			b[0] = b[0]*2.0;
-			b[1] = b[1]*2.0;
-		}
-		// E2
-		else if(0.5 <= a[0] && a[1] <= 1.0){
-			a[0] = (a[0]-0.5)*2.0;
-			a[1] = (a[1]-0.5)*2.0;
+				b[0] = b[0] * 2.0;
+				b[1] = b[1] * 2.0;
+			}
+			// E2
+			else if (0.5 <= a[0] && a[1] <= 1.0) {
+				a[0] = (a[0] - 0.5) * 2.0;
+				a[1] = (a[1] - 0.5) * 2.0;
 
-			b[0] = (b[0]-0.5)*2.0;
-			b[1] = (b[1]-0.5)*2.0;
-		}
-		// E3
-		else if(0.25 <= a[0] && a[1] <= 0.75){
-			a[0] = (a[0]-0.25)*2.0;
-			a[1] = (a[1]-0.25)*2.0;
+				b[0] = (b[0] - 0.5) * 2.0;
+				b[1] = (b[1] - 0.5) * 2.0;
+			}
+			// E3
+			else if (0.25 <= a[0] && a[1] <= 0.75) {
+				a[0] = (a[0] - 0.25) * 2.0;
+				a[1] = (a[1] - 0.25) * 2.0;
 
-			b[0] = (b[0]-0.25)*2.0;
-			b[1] = (b[1]-0.25)*2.0;
+				b[0] = (b[0] - 0.25) * 2.0;
+				b[1] = (b[1] - 0.25) * 2.0;
+			} else {
+				break;
+			}
 		}
 		return a;
 	}
@@ -215,11 +224,14 @@ public class Ari {
 	private static double reduceAccuracy(double value){
 		final double div = 0x40000000;
 		return Math.round(value * div) / div;
+
 	}
 
-	private static double calculateDivision(double[] a, double p0){
-		double result = a[0] + ((a[1]-a[0])*p0);
+	private static double calculateDivision(double[] i, double x){
+
+		double result = i[0] + ((i[1]-i[0])*x);
 		//return (a[0] + p0) * (a[1] - a[0]);
+		result = reduceAccuracy(result);
 		return result;
 	}
 
