@@ -77,6 +77,15 @@ public class AriAppController {
 	private Label mseLabel;
 
 	@FXML
+	private Label entropyLabel1;
+
+	@FXML
+	private Label entropyLabel2;
+
+	@FXML
+	private Label entropyLabel3;
+
+	@FXML
 	private Label sizeLabel;
 
 	@FXML
@@ -153,8 +162,21 @@ public class AriAppController {
 			mseLabel.setText("");
 			return;
 		}
-		double mse = decodedImage.getMSEfromComparisonTo(sourceImage);
+		double mse = decodedImage.getMSEfromComparisonTo(binarizedImage);
 		mseLabel.setText(String.format("MSE = %.1f", mse));
+	}
+
+	private void getEntropy() {
+		if(sourceImage.argb.length != binarizedImage.argb.length || decodedImageFileSize == 0) {
+			mseLabel.setText("");
+			return;
+		}
+		double entropy1 = sourceImage.getEntropy();
+		double entropy2 = binarizedImage.getEntropy();
+		double entropy3 = decodedImage.getEntropy();
+		entropyLabel1.setText(String.format("Entropy = %.3f", entropy1));
+		entropyLabel2.setText(String.format("Entropy = %.3f", entropy2));
+		entropyLabel3.setText(String.format("Entropy = %.3f", entropy3));
 	}
 	
 	@FXML
@@ -195,6 +217,7 @@ public class AriAppController {
     			messageLabel.setText("Decoding in " + time + " ms");
 				decodedImage.setToView(decodedImageView);
 				sizeLabel.setText("" + decodedImageFileSize + " KB");
+				getEntropy();
     			compareImages();
     		} catch (Exception e) {
     			e.printStackTrace();

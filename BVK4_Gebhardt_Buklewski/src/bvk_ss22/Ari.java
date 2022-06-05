@@ -37,8 +37,7 @@ public class Ari {
 			System.out.println("Pos " + i + ": a = ["+ a[0] + ", " + a[1] + "), b = [" + b[0] + ", " + b[1] + ")");
 
 			// a aktualisieren
-			a[0] = reducedP0;
-			a[1] = 1 - reducedP0;
+			a[0] = calculateDivision(b, 0.5);
 
 			// Pixel lesen
 			int pixel = image.argb[i] & 0x000000ff;
@@ -56,19 +55,21 @@ public class Ari {
 			}
 
 			// TODO: skalierung der Intervalle
+			scale(a, b);
 
-
+			double divisionA = calculateDivision(a, p0);
+			double divisionB = calculateDivision(b, 0.5);
 			// Innere Schleife
 			while(true){
 				// a in obere Hälfte von b
-				if(b[1] / 2 <= a[0] && a[1] <= b[1]){
+				if (b[0] >= calculateDivision(a, p0) && a[1] >= b[1]) {
 					outB.write(1, 1);
 					// obere Abschnitt von b
 					b[0] = b[1] / 2;
 					b[1] = b [1];
 				}
 				// a in unterer Hälfte von b
-				else if(b[0] <= a[0] && a[1] <= b[1] / 2){
+				else if (a[0]<= b[0] && b[1] <= calculateDivision(a, p0)) {
 					outB.write(0, 1);
 					// unterer Abschnitt von b
 					b[0] = b[0];
@@ -100,7 +101,6 @@ public class Ari {
 
 		double valueFromFileFormat = inB.read(16);
 		double p0 = valueFromFileFormat / 0x4000; // wahrscheinlichkeit schwarz
-		//p0 = reduceAccuracy(p0);
 		System.out.println("p0 = "+ p0);
 
 		RasterImage result = new RasterImage(width, height);
@@ -108,8 +108,6 @@ public class Ari {
 		// Initialisieren der Anfangsintervalle
 		double[] a = {0.0, 1.0}; //richtet sich nach wahrscheinlchkeit p0
 		double[] b = {0.0, 1.0}; // codierte Bitfolge
-
-
 
 		for(int pos = 0; pos < result.argb.length; pos++){
 			System.out.println("Pos " + pos + ": a = ["+ a[0] + ", " + a[1] + "), b = [" + b[0] + ", " + b[1] + ")");
@@ -122,19 +120,16 @@ public class Ari {
 				//if (b[0] >= divisionA && b[1] <= a[1]) {
 				if (b[0] >= calculateDivision(a, p0) && a[1] >= b[1]) {
 					// Symbol W schreiben
-					//System.out.println("oberer Teil");
 					int pixel = 255;
 					result.argb[pos] = (0xff << 24) | (pixel << 16) | (pixel << 8) | pixel;
 					// aktualisiere a
 					a[0] = calculateDivision(a, p0);
-
 					break;
 				}
 				// b im unteren Anteil von a
 				//else if (b[0] <= a[1] && b[1] < divisionA) {
 				else if (a[0]<= b[0] && b[1] <= calculateDivision(a, p0)) {
 					// Symbol S schreiben
-					//System.out.println("unterer Teil");
 					int pixel = 0;
 					result.argb[pos] = (0xff << 24) | (pixel << 16) | (pixel << 8) | pixel;
 					// aktualisiere a
@@ -146,23 +141,15 @@ public class Ari {
 				}
 				// aktualisiere b
 				int bit = inB.read(1);
-				//System.out.println("read a bit");
 				if(bit == 0){
 					b[1] = calculateDivision(b, 0.5);
 				}
 				else{
 					b[0] = calculateDivision(b, 0.5);
 				}
-
-
 			}
-
 			scale(a,b);
-
-
-
 		}
-
 
 		System.out.println("");
 		System.out.println("_________________________________________________________________________________________");

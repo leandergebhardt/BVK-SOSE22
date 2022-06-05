@@ -58,7 +58,7 @@
                <children>
                   <HBox prefHeight="15.0" prefWidth="200.0">
                      <children>
-                        <Label fx:id="sourceInfoLabel" text="Info Label" />
+                        <Label fx:id="entropyLabel1" text="Info Label" />
                      </children>
                   </HBox>
                   <Label fx:id="sourceFileSize" layoutX="10.0" layoutY="10.0" text="Info Label" />
@@ -71,7 +71,7 @@
             </VBox>
             <VBox layoutX="326.0" layoutY="78.0" spacing="5.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                <children>
-                  <Label fx:id="rleInfoLabel1" text="Info Label" />
+                  <Label fx:id="entropyLabel2" text="Info Label" />
                   <HBox minHeight="25.0" prefHeight="25.0" prefWidth="200.0">
                      <children>
                         <Label text="Zoom">
@@ -94,6 +94,7 @@
             </VBox>
             <VBox spacing="5.0" GridPane.columnIndex="2" GridPane.rowIndex="1">
                <children>
+                  <Label fx:id="entropyLabel3" layoutX="10.0" layoutY="10.0" text="Info Label" />
                   <Label fx:id="mseLabel" text="MSE" />
                   <Label fx:id="sizeLabel" layoutX="10.0" layoutY="10.0" text="Filesize">
                      <font>

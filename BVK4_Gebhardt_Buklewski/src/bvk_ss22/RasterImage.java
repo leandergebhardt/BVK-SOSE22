@@ -6,14 +6,10 @@
 
 package bvk_ss22;
 
+import javafx.scene.image.*;
+
 import java.io.File;
 import java.util.Arrays;
-
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.image.PixelFormat;
-import javafx.scene.image.PixelWriter;
-import javafx.scene.image.WritableImage;
 
 public class RasterImage {
 	
@@ -83,6 +79,27 @@ public class RasterImage {
 		}
 		double mse = ((1.0/numberOfPixel)*error);
 		return mse;
+	}
+
+	public float getEntropy() {
+		double probability = 0;
+		float entropy = 0;
+		int[] histogram = new int[265];
+
+		for (int k : argb) {
+			histogram[k & 0xff] ++;
+		}
+		for (int i = 0; i < histogram.length; i++) {
+			//wahrscheinlichkeit von index i
+			probability = histogram[i] / (double)argb.length;
+			if (probability > 0) {
+				// entropy formel: Pi * log2 Pi
+				// calculate base 2 logarithm of probability
+				entropy += probability * (Math.log10(probability) / Math.log10(2));
+			}
+		}
+		entropy = -entropy;
+		return entropy;
 	}
 	
 
