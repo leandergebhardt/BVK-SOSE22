@@ -37,7 +37,7 @@ public class Ari {
 			System.out.println("Pos " + i + ": a = ["+ a[0] + ", " + a[1] + "), b = [" + b[0] + ", " + b[1] + ")");
 
 			// a aktualisieren
-			a[0] = calculateDivision(b, 0.5);
+			a[0] = calculateDivision(a, p0);
 
 			// Pixel lesen
 			int pixel = image.argb[i] & 0x000000ff;
@@ -46,15 +46,14 @@ public class Ari {
 			// schwarzer Pixel gelesen
 			if(black){
 				// unteren Abschnitt a
-
+				a[1] = calculateDivision(a, p0);
 			}
 			// weißes Pixel gelesen
 			else {
 				// oberen Abschnitt a
-
+				a[0] = calculateDivision(a, p0);
 			}
-
-			// TODO: skalierung der Intervalle
+			// Intervall a, b skalieren
 			scale(a, b);
 
 			double divisionA = calculateDivision(a, p0);
@@ -62,24 +61,25 @@ public class Ari {
 			// Innere Schleife
 			while(true){
 				// a in obere Hälfte von b
-				if (b[0] >= calculateDivision(a, p0) && a[1] >= b[1]) {
+				if (a[0] >= calculateDivision(b, p0) && b[1] >= a[1]) {
 					outB.write(1, 1);
 					// obere Abschnitt von b
-					b[0] = b[1] / 2;
+					b[0] = calculateDivision(b, 0.5);
 					b[1] = b [1];
 				}
 				// a in unterer Hälfte von b
-				else if (a[0]<= b[0] && b[1] <= calculateDivision(a, p0)) {
+				else if (b[0]<= a[0] && a[1] <= calculateDivision(b, p0)) {
 					outB.write(0, 1);
 					// unterer Abschnitt von b
-					b[0] = b[0];
-					b[1] = b[1] / 2;
+					b[0] = 0;
+					b[1] = calculateDivision(b, 0.5);
 				}
 				else {
 					break;
 				}
-
 			}
+			// falls Mitte von b in a
+			//outB.write(1, 1);
 		}
 
 		outB.close();
@@ -87,7 +87,6 @@ public class Ari {
 		System.out.println("_________________________________________________________________________________________");
 		System.out.println("Finished Encoding");
 		System.out.println("width: " + width + " height: " + height);
-		//System.out.println("Modus: " + modus );
 		System.out.println(out.size() / 1000 + " KB");
 		System.out.println("_________________________________________________________________________________________");
 
