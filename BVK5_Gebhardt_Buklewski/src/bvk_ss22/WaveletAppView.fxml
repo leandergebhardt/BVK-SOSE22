@@ -12,9 +12,8 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
 
-<BorderPane maxHeight="580.0" maxWidth="835.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="bvk_ss22.AriAppController">
+<BorderPane maxHeight="580.0" maxWidth="835.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="bvk_ss22.WaveletAppController">
    <center>
       <GridPane hgap="5.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" vgap="5.0" BorderPane.alignment="CENTER">
          <columnConstraints>
@@ -36,7 +35,7 @@
                   </ScrollPane>
                </content>
             </TitledPane>
-            <TitledPane collapsible="false" layoutX="10.0" layoutY="10.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Preprocessed Image" GridPane.columnIndex="1">
+            <TitledPane collapsible="false" layoutX="10.0" layoutY="10.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Wavelet Transformataion" GridPane.columnIndex="1">
                <content>
                   <ScrollPane fx:id="processedImageScrollPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" pannable="true">
                      <content>
@@ -45,7 +44,7 @@
                   </ScrollPane>
                </content>
             </TitledPane>
-            <TitledPane collapsible="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Decoded Image" GridPane.columnIndex="2">
+            <TitledPane collapsible="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Rekonstruiertes Bild" GridPane.columnIndex="2">
                <content>
                   <ScrollPane fx:id="decodedScrollPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" pannable="true">
                      <content>
@@ -85,9 +84,9 @@
                   </HBox>
                   <HBox alignment="CENTER_LEFT" spacing="8.0">
                      <children>
-                        <Label text="T = " />
+                        <Label text="Kaskaden:" />
                         <Label fx:id="kValue" text="0" />
-                        <Slider fx:id="kSlider" blockIncrement="0.1" max="256.0" onKeyReleased="#kChanged" onMouseClicked="#kChanged" onMouseDragged="#kChanged" value="175.0" />
+                        <Slider fx:id="kSlider" blockIncrement="1.0" max="5.0" onKeyReleased="#kChanged" onMouseClicked="#kChanged" onMouseDragged="#kChanged" />
                      </children>
                   </HBox>
                </children>
@@ -95,16 +94,6 @@
             <VBox spacing="5.0" GridPane.columnIndex="2" GridPane.rowIndex="1">
                <children>
                   <Label fx:id="mseLabel" text="MSE" />
-                  <Label fx:id="sizeLabel" layoutX="10.0" layoutY="10.0" text="Filesize">
-                     <font>
-                        <Font name="System Bold" size="13.0" />
-                     </font></Label>
-                  <HBox alignment="CENTER_LEFT" spacing="8.0">
-                     <children>
-                        <Button mnemonicParsing="false" onAction="#saveCompressedImage" prefHeight="27.0" text="Save Compressed" />
-                        <Button layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#openCompressedImage" prefHeight="27.0" text="Open Compressed" />
-                     </children>
-                  </HBox>
                </children>
             </VBox>
          </children>
