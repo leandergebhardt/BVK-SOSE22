@@ -1,0 +1,106 @@
+// BVK Ue1 SS2022 Vorgabe
+//
+// Copyright (C) 2022 by Klaus Jung
+// All rights reserved.
+// Date: 2021-03-24
+
+package bvk_ss22;
+
+import javafx.scene.image.*;
+
+import java.io.File;
+import java.util.Arrays;
+
+public class RasterImage {
+	
+	private static final int gray  = 0xffa0a0a0;
+
+	public int[] argb;	// pixels represented as ARGB values in scanline order
+	public int width;	// image width in pixels
+	public int height;	// image height in pixels
+	
+	public RasterImage(int width, int height) {
+		// creates an empty RasterImage of given size
+		this.width = width;
+		this.height = height;
+		argb = new int[width * height];
+		Arrays.fill(argb, gray);
+	}
+
+	public RasterImage(File file) {			// TODO: change image to black and white
+		// creates an RasterImage by reading the given file
+		Image image = null;
+		if(file != null && file.exists()) {
+			image = new Image(file.toURI().toString());
+		}
+		if(image != null && image.getPixelReader() != null) {
+			width = (int)image.getWidth();
+			height = (int)image.getHeight();
+			argb = new int[width * height];
+			image.getPixelReader().getPixels(0, 0, width, height, PixelFormat.getIntArgbInstance(), argb, 0, width);
+		} else {
+			// file reading failed: create an empty RasterImage
+			this.width = 256;
+			this.height = 256;
+			argb = new int[width * height];
+			Arrays.fill(argb, gray);
+		}
+	}
+	
+	public RasterImage(ImageView imageView) {
+		// creates a RasterImage from that what is shown in the given ImageView
+		Image image = imageView.getImage();
+		width = (int)image.getWidth();
+		height = (int)image.getHeight();
+		argb = new int[width * height];
+		image.getPixelReader().getPixels(0, 0, width, height, PixelFormat.getIntArgbInstance(), argb, 0, width);
+	}
+	
+	public void setToView(ImageView imageView) {
+		// sets the current argb pixels to be shown in the given ImageView
+		if(argb != null) {
+			WritableImage wr = new WritableImage(width, height);
+			PixelWriter pw = wr.getPixelWriter();
+			pw.setPixels(0, 0, width, height, PixelFormat.getIntArgbInstance(), argb, 0, width);
+			imageView.setImage(wr);
+		}
+	}
+		
+	// image operations
+	
+	public double getMSEfromComparisonTo(RasterImage image) {
+		// TODO: compare images "this" and "image" and return the Mean Square Error
+		int height = image.height;
+		int width = image.width;
+		int numberOfPixel = height*width;
+		double error = 0.0;
+		for(int x = 0; x < numberOfPixel; x++){
+			error += Math.pow(this.argb[x]-image.argb[x],2);
+		}
+		double mse = ((1.0/numberOfPixel)*error);
+		return mse;
+	}
+
+	public float getEntropy() {
+		double probability = 0;
+		float entropy = 0;
+		int[] histogram = new int[265];
+
+		for (int k : argb) {
+			histogram[k & 0xff] ++;
+		}
+		for (int i = 0; i < histogram.length; i++) {
+			//wahrscheinlichkeit von index i
+			probability = histogram[i] / (double)argb.length;
+			if (probability > 0) {
+				// entropy formel: Pi * log2 Pi
+				// calculate base 2 logarithm of probability
+				entropy += probability * (Math.log10(probability) / Math.log10(2));
+			}
+		}
+		entropy = -entropy;
+		return entropy;
+	}
+	
+
+}

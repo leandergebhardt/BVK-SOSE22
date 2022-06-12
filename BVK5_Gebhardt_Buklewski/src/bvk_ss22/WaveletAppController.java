@@ -1,36 +1,38 @@
-// BVK Ue1 SS2022 Vorgabe
+package bvk_ss22;// BVK Ue1 SS2022 Vorgabe
 //
 // Copyright (C) 2022 by Klaus Jung
 // All rights reserved.
 // Date: 2022-03-24
 
-package bvk_ss22;
-
 import javafx.fxml.FXML;
-import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Slider;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Region;
 import javafx.stage.FileChooser;
+import BVK5_Gebhardt_Buklewski.src.bvk_ss22.WaveletFilter;
 
 import java.io.*;
 
-public class AriAppController {
+public class WaveletAppController {
 
-	private static final String initialFileName = "./BVK4_Gebhardt_Buklewski/rhino_part.png";
+	private static final String initialFileName = "./BVK5_Gebhardt_Buklewski/test2.jpg";
 	private static File fileOpenPath = new File(".");
 
 	private RasterImage sourceImage;
 	private String sourceFileName;
 	
-	private RasterImage binarizedImage;
+	private RasterImage greyScaleImage;
 
-	private RasterImage decodedImage;
+	private RasterImage waveletImage;
+
+	private RasterImage recontructedImage;
 
 	private long decodedImageFileSize;
 	private long sourceSize;
+
+	private double p0;
 
     @FXML
     private ImageView sourceImageView;
@@ -75,7 +77,13 @@ public class AriAppController {
 	private Label mseLabel;
 
 	@FXML
-	private Label sizeLabel;
+	private Label entropyLabel1;
+
+	@FXML
+	private Label entropyLabel2;
+
+	@FXML
+	private Label entropyLabel3;
 
 	@FXML
 	private Slider zoomSlider;
@@ -85,9 +93,6 @@ public class AriAppController {
 
 	@FXML
 	private Label kValue;
-
-	@FXML
-	private ChoiceBox<String> myChoiceBox;
 
     @FXML
     void openImage() {
@@ -122,8 +127,7 @@ public class AriAppController {
     	double K = kSlider.getValue();
 		int k = (int) Math.floor(K);
 		kValue.setText(""+ k +"");
-		binarizedImage = bvk_ss22.WaveletFilter.binarize(sourceImage, binarizedImage, k);
-		binarizedImage.setToView(processedImageView);
+		// TODO: Perfom Iterations for kaskades
 	}
 
 	private void setKSlider(int M) {
@@ -139,20 +143,36 @@ public class AriAppController {
 		sourceFileSize.setText("" + sourceSize +" KB");
 		messageLabel.setText("Opened image " + sourceFileName);
 		sourceImage = new RasterImage(file);
-		sourceImage.setToView(sourceImageView);
-		binarizedImage = new RasterImage(sourceImage.width, sourceImage.height);
-		binarizedImage = bvk_ss22.WaveletFilter.binarize(sourceImage, binarizedImage, K);
-		binarizedImage.setToView(processedImageView);
-		compareImages();
+		// binarizedImage = new RasterImage(sourceImage.width, sourceImage.height);
+		greyScaleImage = new RasterImage(sourceImage.width, sourceImage.height);
+		// binarizedImage = WaveletFilter.binarize(sourceImage, binarizedImage, K);
+		greyScaleImage = WaveletFilter.greyScale(sourceImage, sourceImage);
+		// binarizedImage.setToView(processedImageView);
+		greyScaleImage.setToView(sourceImageView);
+
+		//compareImages();
 	}
 	
-	private void compareImages() {
+	/*private void compareImages() {
 		if(sourceImage.argb.length != binarizedImage.argb.length || decodedImageFileSize == 0) {
 			mseLabel.setText("");
 			return;
 		}
-		double mse = decodedImage.getMSEfromComparisonTo(sourceImage);
+		double mse = decodedImage.getMSEfromComparisonTo(binarizedImage);
 		mseLabel.setText(String.format("MSE = %.1f", mse));
+	}
+
+	private void getEntropy() {
+		if(sourceImage.argb.length != binarizedImage.argb.length || decodedImageFileSize == 0) {
+			mseLabel.setText("");
+			return;
+		}
+		double entropy1 = sourceImage.getEntropy();
+		double entropy2 = binarizedImage.getEntropy();
+		double entropy3 = decodedImage.getEntropy();
+		entropyLabel1.setText(String.format("Entropy = %.3f", entropy1));
+		entropyLabel2.setText(String.format("Entropy = %.3f", entropy2));
+		entropyLabel3.setText(String.format("Entropy = %.3f", entropy3));
 	}
 	
 	@FXML
@@ -167,7 +187,7 @@ public class AriAppController {
     		try {
     			DataOutputStream ouputStream = new DataOutputStream(new FileOutputStream(selectedFile));
     			long startTime = System.currentTimeMillis();
-				Ari.encodeImage(binarizedImage, 0, M,ouputStream);
+				// Wavelet.encodeImage(binarizedImage, ouputStream);
     			long time = System.currentTimeMillis() - startTime;
     			messageLabel.setText("Encoding in " + time + " ms");
     		} catch (Exception e) {
@@ -175,6 +195,7 @@ public class AriAppController {
     		}
     	}
 	}
+	 */
 	
 	@FXML
 	public void openCompressedImage() {
@@ -187,14 +208,13 @@ public class AriAppController {
 			decodedImageFileSize = (long) Math.ceil(decodedImageFileSize / 1000);
     		try {
     			DataInputStream inputStream = new DataInputStream(new FileInputStream(selectedFile));
-    			long startTime = System.currentTimeMillis();
-				decodedImage = Ari.decodeImage(inputStream);
-    			long time = System.currentTimeMillis() - startTime;
-    			messageLabel.setText("Decoding in " + time + " ms");
-				decodedImage.setToView(decodedImageView);
-				setKSlider(Ari.getM());
-				sizeLabel.setText("" + decodedImageFileSize + " KB");
-    			compareImages();
+    			// long startTime = System.currentTimeMillis();
+				// decodedImage = Wavelet.decodeImage(inputStream);
+    			// long time = System.currentTimeMillis() - startTime;
+    			// messageLabel.setText("Decoding in " + time + " ms");
+				//decodedImage.setToView(decodedImageView);
+				//getEntropy();
+    			//compareImages();
     		} catch (Exception e) {
     			e.printStackTrace();
     		}

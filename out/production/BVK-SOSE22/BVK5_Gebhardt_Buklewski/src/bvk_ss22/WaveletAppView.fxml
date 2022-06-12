@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+ * BVK Ue1 SS2022 Vorgabe
+ *
+ * Copyright (C) 2022 by Klaus Jung
+ * All rights reserved.
+ * Date: 2021-03-24
+-->
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane maxHeight="580.0" maxWidth="835.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="bvk_ss22.WaveletAppController">
+   <center>
+      <GridPane hgap="5.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" vgap="5.0" BorderPane.alignment="CENTER">
+         <columnConstraints>
+            <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" percentWidth="50.0" />
+            <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" percentWidth="50.0" />
+            <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" percentWidth="50.0" prefWidth="100.0" />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints minHeight="10.0" vgrow="ALWAYS" />
+            <RowConstraints minHeight="50.0" valignment="TOP" vgrow="NEVER" />
+         </rowConstraints>
+         <children>
+            <TitledPane collapsible="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Source Image">
+               <content>
+                  <ScrollPane fx:id="sourceScrollPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" pannable="true">
+                     <content>
+                        <ImageView fx:id="sourceImageView" pickOnBounds="true" preserveRatio="true" smooth="false" />
+                     </content>
+                  </ScrollPane>
+               </content>
+            </TitledPane>
+            <TitledPane collapsible="false" layoutX="10.0" layoutY="10.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Wavelet Transformaton" GridPane.columnIndex="1">
+               <content>
+                  <ScrollPane fx:id="processedImageScrollPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" pannable="true">
+                     <content>
+                        <ImageView fx:id="processedImageView" pickOnBounds="true" preserveRatio="true" smooth="false" />
+                     </content>
+                  </ScrollPane>
+               </content>
+            </TitledPane>
+            <TitledPane collapsible="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Rekonstruiertes Bild" GridPane.columnIndex="2">
+               <content>
+                  <ScrollPane fx:id="decodedScrollPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" pannable="true">
+                     <content>
+                        <ImageView fx:id="decodedImageView" pickOnBounds="true" preserveRatio="true" smooth="false" />
+                     </content>
+                  </ScrollPane>
+               </content>
+            </TitledPane>
+            <VBox spacing="5.0" GridPane.rowIndex="1">
+               <children>
+                  <HBox prefHeight="15.0" prefWidth="200.0">
+                     <children>
+                        <Label fx:id="entropyLabel1" text="Info Label" />
+                     </children>
+                  </HBox>
+                  <Label fx:id="sourceFileSize" layoutX="10.0" layoutY="10.0" text="Info Label" />
+                  <HBox spacing="10.0" VBox.vgrow="NEVER">
+                     <children>
+                        <Button mnemonicParsing="false" onAction="#openImage" prefHeight="27.0" text="Open Image" />
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+            <VBox layoutX="326.0" layoutY="78.0" spacing="5.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+               <children>
+                  <Label fx:id="entropyLabel2" text="Info Label" />
+                  <HBox minHeight="25.0" prefHeight="25.0" prefWidth="200.0">
+                     <children>
+                        <Label text="Zoom">
+                           <HBox.margin>
+                              <Insets />
+                           </HBox.margin>
+                        </Label>
+                        <Slider fx:id="zoomSlider" max="20.0" min="1.0" onKeyReleased="#zoomChanged" onMouseClicked="#zoomChanged" onMouseDragged="#zoomChanged" value="1.0" />
+                        <Label fx:id="zoomLabel" layoutX="10.0" layoutY="10.0" text="1.0" />
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER_LEFT" spacing="8.0">
+                     <children>
+                        <Label text="Kaskaden:" />
+                        <Label fx:id="kValue" text="0" />
+                        <Slider fx:id="kSlider" blockIncrement="1.0" max="5.0" onKeyReleased="#kChanged" onMouseClicked="#kChanged" onMouseDragged="#kChanged" value="3.0" />
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+            <VBox spacing="5.0" GridPane.columnIndex="2" GridPane.rowIndex="1">
+               <children>
+                  <Label fx:id="entropyLabel3" layoutX="10.0" layoutY="10.0" text="Info Label" />
+                  <Label fx:id="mseLabel" text="MSE" />
+                  <HBox alignment="CENTER_LEFT" spacing="8.0">
+                     <children>
+                        <Button layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#openCompressedImage" prefHeight="27.0" text="Open Image" />
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+         </children>
+      </GridPane>
+   </center>
+   <bottom>
+      <Label fx:id="messageLabel" minHeight="27.0" text="Message Label" BorderPane.alignment="CENTER">
+         <padding>
+            <Insets top="10.0" />
+         </padding>
+      </Label>
+   </bottom>
+   <padding>
+      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+   </padding>
+</BorderPane>

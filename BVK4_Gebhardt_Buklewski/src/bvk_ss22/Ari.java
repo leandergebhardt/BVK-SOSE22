@@ -6,13 +6,10 @@
 
 package bvk_ss22;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
-
 public class Ari {
 	public static int M;
 
+<<<<<<< Updated upstream
 	public static int getM() {
 		return M;
 	}
@@ -222,4 +219,6 @@ public class Ari {
 		return result;
 	}
 
+=======
+>>>>>>> Stashed changes
 }
