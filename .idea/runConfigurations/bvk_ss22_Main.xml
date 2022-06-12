@@ -1,8 +1,10 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="bvk_ss22.Main" type="Application" factoryName="Application" nameIsGenerated="true">
     <option name="ALTERNATIVE_JRE_PATH" value="1.8" />
+    <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
     <option name="MAIN_CLASS_NAME" value="bvk_ss22.Main" />
     <module name="BVK-SOSE22" />
+    <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/BVK5_Gebhardt_Buklewski" />
     <extension name="coverage">
       <pattern>
         <option name="PATTERN" value="bvk_ss22.*" />
