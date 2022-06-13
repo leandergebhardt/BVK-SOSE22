@@ -86,7 +86,7 @@
                      <children>
                         <Label text="Kaskaden:" />
                         <Label fx:id="kValue" text="0" />
-                        <Slider fx:id="kSlider" blockIncrement="1.0" max="5.0" onKeyReleased="#kChanged" onMouseClicked="#kChanged" onMouseDragged="#kChanged" value="3.0" />
+                        <Slider fx:id="kSlider" blockIncrement="1.0" max="5.0" onKeyReleased="#kChanged" onMouseClicked="#kChanged" onMouseDragged="#kChanged" />
                      </children>
                   </HBox>
                </children>
