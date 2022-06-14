@@ -6,6 +6,8 @@
 
 package bvk_ss22;
 
+import java.lang.reflect.Array;
+
 public class Wavelet {
 
 	public static double[][] kaskade(double[][] input){
@@ -17,7 +19,7 @@ public class Wavelet {
 		double[] g0 = new double[] {1.0, 2.0, 1.0};
 		double[] g1 = new double[] {-1.0, -2.0, 6.0, -2.0, -1.0};
 
-		int indexh0 = 0;
+		int indexh0 = 0;		//wofür sind diese berechnungen?
 		for(double element : h0){
 			h0[indexh0] = element * 0.125;
 			indexh0++;
@@ -44,8 +46,47 @@ public class Wavelet {
 		return result;
 	}
 
+	public static double[][] lowPassHorizontal (double[][] image){
+		double[] h0 = new double[] {-1.0, 2.0, 6.0, 2.0, -1.0};
+		double[][] resultImage = new double[image.length][image[0].length];
+			// durch x&y iterieren und h0 als filter anwenden; Randbehandlung: spiegeln
+			for(int y = 0; y < image.length; y++){
+				for(int x = 0; x < image[0].length; x++){
+					System.out.println("pixelvalue before: " + image[y][x]);
+					//filter anwenden
+					int count = 0;
+					double value=0;
+					for (int f = -2; f <= 2; f++) {
+						int i = f;
+						if(x+i < 0){i = i * (-1);}
+						if(x+i >= image[0].length){i = i * (-1);}
+
+						value += image[y][x+i] * h0[count];
+
+						count++;
+					}
+
+					value = value/8;
+					
+					System.out.println(value);
+
+
+					resultImage[y][x] = value;
+				}
+			}
+		return resultImage;
+	}
+
+	public double[][] highPassHorizontal (double[][] image){
+		double[] h1 = new double[] {-1.0, 2.0, -1.0};
+			//
+
+		return image;
+	}
+
 	public static RasterImage testConverter(RasterImage input){
 		double[][] test = convertImageTo2DArray(input);
+		test = lowPassHorizontal(test);
 		return convert2DArrayToImage(test);
 	}
 
