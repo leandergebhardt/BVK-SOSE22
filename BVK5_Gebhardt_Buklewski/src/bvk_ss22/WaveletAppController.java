@@ -124,8 +124,9 @@ public class WaveletAppController {
 		int k = (int) Math.floor(K);
 		kValue.setText(""+ k +"");
 		// TODO: Perform kaskade loop depending on value
-		waveletImage = Wavelet.testConverter(greyScaleImage);
-		waveletImage.setToView(processedImageView);
+		for(int i = 0; i < k; i++){
+			Wavelet.kaskade(Wavelet.convertImageTo2DArray(greyScaleImage));
+		}
 	}
 
 	private void setKSlider(int M) {
@@ -144,6 +145,10 @@ public class WaveletAppController {
 		greyScaleImage = new RasterImage(sourceImage.width, sourceImage.height);
 		greyScaleImage = Filter.greyScale(sourceImage, greyScaleImage);
 		greyScaleImage.setToView(sourceImageView);
+
+		// ---Test Purpose---
+		waveletImage = Wavelet.testConverter(greyScaleImage);
+		waveletImage.setToView(decodedImageView);
 		//compareImages();
 	}
 	
