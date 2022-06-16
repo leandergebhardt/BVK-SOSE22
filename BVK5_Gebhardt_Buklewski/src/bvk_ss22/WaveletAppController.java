@@ -124,7 +124,11 @@ public class WaveletAppController {
 		int k = (int) Math.floor(K);
 		kValue.setText(""+ k +"");
 		// TODO: Perform kaskade loop depending on value
-		waveletImage = Wavelet.testConverter(greyScaleImage);
+		waveletImage = Wavelet.testConverterBegin(greyScaleImage);
+		/*for(int i = 1; i <= k; i++){
+			waveletImage = Wavelet.kaskade(waveletImage, i);
+		}
+		 */
 		waveletImage.setToView(processedImageView);
 	}
 

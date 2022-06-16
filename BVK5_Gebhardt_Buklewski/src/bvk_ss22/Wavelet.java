@@ -8,12 +8,12 @@ package bvk_ss22;
 
 public class Wavelet {
 
-	public static double[][] kaskade(double[][] input){
-		double[][] result = new double[input.length][input.length];
+	public static RasterImage kaskade(RasterImage input, int i){
+		double[][] inputArray = convertImageTo2DArray(input);
+		inputArray = fitArrayToKaskade(inputArray, i);
 
-
-
-		return result;
+		RasterImage resultImage = testConverter(inputArray, i);
+		return resultImage;
 	}
 
 	public static double[][] lowPassHorizontal (double[][] image){
@@ -175,7 +175,7 @@ public class Wavelet {
 
 	}
 
-	public static RasterImage testConverter(RasterImage input){
+	public static RasterImage testConverterBegin(RasterImage input){
 		double[][] source = convertImageTo2DArray(input);
 
 		double[][] HL = highPassHorizontal(source);
@@ -200,6 +200,29 @@ public class Wavelet {
 		return convert2DArrayToImage(result);
 	}
 
+	public static RasterImage testConverter(double[][] input, int i){
+		double[][] HL = highPassHorizontal(input);
+		HL = lowPassVertical(HL);
+
+		double[][] LH = lowPassHorizontal(input);
+		LH = highPassVertical(LH);
+
+		double[][] LL = lowPassHorizontal(input);
+		LL = lowPassVertical(LL);
+
+		double[][] HH = highPassHorizontal(input);
+		HH = highPassVertical(HH);
+
+		// Bilder zuschneiden
+		HL = fitArray(HL);
+		LH = fitArray(LH);
+		LL = fitArray(LL);
+		HH = fitArray(HH);
+		double[][] result = stitchTogetherKaskade(LL, LH, HL, HH, i);
+
+		return convert2DArrayToImage(result);
+	}
+
 	private static double[][] stitchTogether(double[][] ll, double[][] lh, double[][] hl, double[][] hh) {
 		int newHeight = ll.length * 2;
 		int newWidth = ll[0].length * 2;
@@ -207,6 +230,38 @@ public class Wavelet {
 
 		int offsetY = newHeight / 2;
 		int offsetX = newWidth / 2;
+
+		for(int y = 0; y < newHeight; y++){
+			for(int x = 0; x < newWidth; x++) {
+				// LL Pass oben links
+				if(x < newWidth / 2 && y < newHeight / 2 && x < newWidth && y < newHeight){
+					result[y][x] = ll[y][x];
+				}
+				// LH oben rechts
+				if(x > newWidth / 2 && y < newHeight / 2 && x < newWidth && y < newHeight){
+					result[y][x] = Math.round(lh[y][x -offsetX]*2 + 127);
+				}
+				// HL unten links
+				if(x < newWidth / 2 && y > newHeight / 2 && x < newWidth && y < newHeight){
+					result[y][x] = Math.round(hl[y - offsetY][x]*2 + 127);
+				}
+				// HH unten rechts
+				if(x > newWidth / 2 && y > newHeight / 2 && x < newWidth && y < newHeight){
+					result[y][x] = Math.round(hh[y - offsetY][x - offsetX]*2 + 127);
+				}
+			}
+		}
+
+		return result;
+	}
+
+	private static double[][] stitchTogetherKaskade(double[][] ll, double[][] lh, double[][] hl, double[][] hh, int i) {
+		int newHeight = ll.length * 2 * i;
+		int newWidth = ll[0].length * 2 * i;
+		double[][] result = new double[newHeight][newWidth];
+
+		int offsetY = newHeight / 2 * i;
+		int offsetX = newWidth / 2 * i;
 
 		for(int y = 0; y < newHeight; y++){
 			for(int x = 0; x < newWidth; x++) {
@@ -249,6 +304,21 @@ public class Wavelet {
 	public static double[][] fitArray(double[][] input){
 		int newWidth = input[0].length / 2;
 		int newHeight = input.length / 2;
+
+		double[][] fittedArray = new double[newHeight][newWidth];
+
+		for(int y = 0; y < newHeight; y++){
+			for(int x = 0; x < newWidth; x++) {
+				fittedArray[y][x] = input[y][x];
+			}
+		}
+
+		return fittedArray;
+	}
+
+	public static double[][] fitArrayToKaskade(double[][] input, int i){
+		int newWidth = input[0].length / 2 * i;
+		int newHeight = input.length / 2 * i;
 
 		double[][] fittedArray = new double[newHeight][newWidth];
 
