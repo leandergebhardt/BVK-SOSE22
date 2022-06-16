@@ -146,7 +146,7 @@ public class Wavelet {
 
 					value = value / 2.0;
 
-					value += 127;
+					//value += 127;
 
 					System.out.println(value);
 
@@ -187,7 +187,6 @@ public class Wavelet {
 
 					value = value / 2.0;
 
-					value += 127;
 
 					System.out.println(value);
 
@@ -202,10 +201,8 @@ public class Wavelet {
 
 	public static RasterImage testConverter(RasterImage input){
 		double[][] test = convertImageTo2DArray(input);
-		test = lowPassHorizontal(test);
 		test = highPassHorizontal(test);
 		test = lowPassVertical(test);
-		test = highPassVertical(test);
 		return convert2DArrayToImage(test);
 	}
 
@@ -232,7 +229,9 @@ public class Wavelet {
 			for(int x = 0; x < input[0].length; x++){
 				int pos = y * input[0].length + x;
 
-				int avg  = (int) input[y][x];
+				int avg  = (int) Math.round(input[y][x]*2 + 127);
+				if(avg < 0){ avg = 0;}
+				if(avg > 255){avg = 255;}
 				result.argb[pos] = (0xff << 24) | (avg << 16) | (avg << 8) | avg;
 			}
 		}
