@@ -129,6 +129,7 @@ public class WaveletAppController {
 			waveletImage = Wavelet.kaskade(waveletImage, i);
 		}
 		 */
+		waveletImage = Wavelet.kaskade(waveletImage, 2);
 		waveletImage.setToView(processedImageView);
 	}
 

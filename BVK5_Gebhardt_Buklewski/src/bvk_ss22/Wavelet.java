@@ -8,12 +8,47 @@ package bvk_ss22;
 
 public class Wavelet {
 
-	public static RasterImage kaskade(RasterImage input, int i){
-		double[][] inputArray = convertImageTo2DArray(input);
-		inputArray = fitArrayToKaskade(inputArray, i);
+	private static double[][] HL;
+	private static double[][] LH;
+	private static double[][] HH;
+	private static double[][] LL;
 
-		RasterImage resultImage = testConverter(inputArray, i);
+	public static RasterImage kaskade(RasterImage input, int kaskades){
+
+		for(int i = 0; i < kaskades; i++){
+			//
+		}
+
+		double[][] inputArray = convertImageTo2DArray(input);
+		double[][] fittedInputArray;
+		fittedInputArray = fitArrayToKaskade(inputArray, kaskades);
+
+		RasterImage secondKaskade = testConverter(fittedInputArray, kaskades);
+		double[][] kaskadeArray = convertImageTo2DArray(secondKaskade);
+		// Combine kaskades
+		RasterImage resultImage = combineKaskades(inputArray, kaskadeArray, kaskades);
 		return resultImage;
+	}
+
+	private static RasterImage combineKaskades(double[][] inputArray, double[][] secondKaskade, int i) {
+		RasterImage result = new RasterImage(inputArray[0].length, inputArray.length);
+		//int halfWidth = (int) (result.width / Math.pow(2, i));
+		//int halfHeight = (int) (result.height / Math.pow(2, i));
+		int halfWidth = result.width / 2;
+		int halfHeight = result.height / 2;
+
+		System.out.println("half Widht = " + halfWidth + " halfHeight = " + halfHeight);
+
+		for(int y = 0; y < result.height; y++) {
+			for (int x = 0; x < result.width; x++) {
+				if(y < halfHeight && x < halfWidth)
+					inputArray[y][x] = secondKaskade[y][x];
+			}
+		}
+
+		result = convert2DArrayToImage(inputArray);
+
+		return result;
 	}
 
 	public static double[][] lowPassHorizontal (double[][] image){
@@ -23,7 +58,7 @@ public class Wavelet {
 			for(int y = 0; y < image.length; y++) {
 				for (int x = 0; x < image[0].length; x++) {
 					if (x % 2 == 0){
-						System.out.println("pixelvalue before: " + image[y][x]);
+					//System.out.println("pixelvalue before: " + image[y][x]);
 					//filter anwenden
 					int count = 0;
 					double value = 0;
@@ -44,7 +79,7 @@ public class Wavelet {
 
 					value = value / 8.0;
 
-					System.out.println(value);
+					//System.out.println(value);
 
 					resultImage[y][x/2] = value;
 				}
@@ -61,7 +96,7 @@ public class Wavelet {
 		for(int y = 0; y < image.length; y++) {
 			for (int x = 0; x < image[0].length; x++) {
 				if (y % 2 == 0){
-					System.out.println("pixelvalue before: " + image[y][x]);
+					//System.out.println("pixelvalue before: " + image[y][x]);
 					//filter anwenden
 					int count = 0;
 					double value = 0;
@@ -82,7 +117,7 @@ public class Wavelet {
 
 					value = value / 8.0;
 
-					System.out.println(value);
+					//System.out.println(value);
 
 					resultImage[y/2][x] = value;
 				}
@@ -99,7 +134,7 @@ public class Wavelet {
 		for(int y = 0; y < image.length; y++){
 			for(int x = 0; x < image[0].length; x++){
 				if (x % 2 == 0) {
-					System.out.println("pixelvalue before: " + image[y][x]);
+					//System.out.println("pixelvalue before: " + image[y][x]);
 					//filter anwenden
 					int count = 0;
 					double value = 0;
@@ -122,7 +157,7 @@ public class Wavelet {
 
 					//value += 127;
 
-					System.out.println(value);
+					//System.out.println(value);
 
 
 					resultImage[y][x/2] = value;
@@ -141,7 +176,7 @@ public class Wavelet {
 		for(int y = 0; y < image.length; y++){
 			for(int x = 0; x < image[0].length; x++){
 				if (y % 2 == 0) {
-					System.out.println("pixelvalue before: " + image[y][x]);
+					//System.out.println("pixelvalue before: " + image[y][x]);
 					//filter anwenden
 					int count = 0;
 					double value = 0;
@@ -163,7 +198,7 @@ public class Wavelet {
 					value = value / 2.0;
 
 
-					System.out.println(value);
+					//System.out.println(value);
 
 
 					resultImage[y/2][x] = value;
@@ -178,16 +213,16 @@ public class Wavelet {
 	public static RasterImage testConverterBegin(RasterImage input){
 		double[][] source = convertImageTo2DArray(input);
 
-		double[][] HL = highPassHorizontal(source);
+		HL = highPassHorizontal(source);
 		HL = lowPassVertical(HL);
 
-		double[][] LH = lowPassHorizontal(source);
+		LH = lowPassHorizontal(source);
 		LH = highPassVertical(LH);
 
-		double[][] LL = lowPassHorizontal(source);
+		LL = lowPassHorizontal(source);
 		LL = lowPassVertical(LL);
 
-		double[][] HH = highPassHorizontal(source);
+		HH = highPassHorizontal(source);
 		HH = highPassVertical(HH);
 
 		// Bilder zuschneiden
@@ -256,12 +291,16 @@ public class Wavelet {
 	}
 
 	private static double[][] stitchTogetherKaskade(double[][] ll, double[][] lh, double[][] hl, double[][] hh, int i) {
-		int newHeight = ll.length * 2 * i;
-		int newWidth = ll[0].length * 2 * i;
+		int newHeight = ll.length * 2;
+		int newWidth = ll[0].length * 2;
 		double[][] result = new double[newHeight][newWidth];
 
-		int offsetY = newHeight / 2 * i;
-		int offsetX = newWidth / 2 * i;
+		System.out.println(i + "nd Kaskade");
+		System.out.println("Kaskade height: " + newHeight +  " Kaskade width: " + newWidth);
+		System.out.println("LL height: " + ll.length +  " LL width: " + ll[0].length);
+
+		int offsetY = ll.length;
+		int offsetX = ll[0].length;
 
 		for(int y = 0; y < newHeight; y++){
 			for(int x = 0; x < newWidth; x++) {
@@ -317,8 +356,10 @@ public class Wavelet {
 	}
 
 	public static double[][] fitArrayToKaskade(double[][] input, int i){
-		int newWidth = input[0].length / 2 * i;
-		int newHeight = input.length / 2 * i;
+		int newWidth = (int) (input[0].length / Math.pow(2, i)) * 2;
+		int newHeight = (int) (input.length / Math.pow(2, i)) * 2;
+
+		System.out.println("kaskade height: " + newHeight + " kaskade width: " + newWidth);
 
 		double[][] fittedArray = new double[newHeight][newWidth];
 
@@ -336,7 +377,7 @@ public class Wavelet {
 		int height = input.length;
 		RasterImage result = new RasterImage(width, height);
 
-		System.out.println("width: " + input[0].length + "px * height: " + input.length + "px");
+		//System.out.println("width: " + input[0].length + "px * height: " + input.length + "px");
 
 		for(int y = 0; y < height; y++){
 			for(int x = 0; x < width; x++){
