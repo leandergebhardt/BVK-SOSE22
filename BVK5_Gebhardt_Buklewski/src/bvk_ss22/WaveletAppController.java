@@ -129,7 +129,7 @@ public class WaveletAppController {
 			waveletImage = Wavelet.kaskade(waveletImage, i);
 		}
 		 */
-		waveletImage = Wavelet.kaskade(waveletImage, 2);
+		waveletImage = Wavelet.kaskade(waveletImage, 3);
 		waveletImage.setToView(processedImageView);
 	}
 

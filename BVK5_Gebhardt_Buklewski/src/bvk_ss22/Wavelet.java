@@ -15,27 +15,28 @@ public class Wavelet {
 
 	public static RasterImage kaskade(RasterImage input, int kaskades){
 
-		for(int i = 0; i < kaskades; i++){
-			//
-		}
-
 		double[][] inputArray = convertImageTo2DArray(input);
 		double[][] fittedInputArray;
-		fittedInputArray = fitArrayToKaskade(inputArray, kaskades);
+		RasterImage resultImage = null;
 
-		RasterImage secondKaskade = testConverter(fittedInputArray, kaskades);
-		double[][] kaskadeArray = convertImageTo2DArray(secondKaskade);
-		// Combine kaskades
-		RasterImage resultImage = combineKaskades(inputArray, kaskadeArray, kaskades);
+		for(int i = 1; i <= kaskades; i++){
+			fittedInputArray = fitArrayToKaskade(inputArray, i);
+
+			RasterImage secondKaskade = testConverter(fittedInputArray, i);
+			double[][] kaskadeArray = convertImageTo2DArray(secondKaskade);
+			// Combine kaskades
+			resultImage = combineKaskades(inputArray, kaskadeArray, i);
+		}
+		
 		return resultImage;
 	}
 
 	private static RasterImage combineKaskades(double[][] inputArray, double[][] secondKaskade, int i) {
 		RasterImage result = new RasterImage(inputArray[0].length, inputArray.length);
-		//int halfWidth = (int) (result.width / Math.pow(2, i));
-		//int halfHeight = (int) (result.height / Math.pow(2, i));
-		int halfWidth = result.width / 2;
-		int halfHeight = result.height / 2;
+		int halfWidth = (int) (result.width / Math.pow(2, i));
+		int halfHeight = (int) (result.height / Math.pow(2, i));
+		//int halfWidth = result.width / 2;
+		//int halfHeight = result.height / 2;
 
 		System.out.println("half Widht = " + halfWidth + " halfHeight = " + halfHeight);
 
@@ -274,15 +275,15 @@ public class Wavelet {
 				}
 				// LH oben rechts
 				if(x > newWidth / 2 && y < newHeight / 2 && x < newWidth && y < newHeight){
-					result[y][x] = Math.round(lh[y][x -offsetX]*2 + 127);
+					result[y][x] = Math.round(lh[y][x -offsetX] * 2 + 127);
 				}
 				// HL unten links
 				if(x < newWidth / 2 && y > newHeight / 2 && x < newWidth && y < newHeight){
-					result[y][x] = Math.round(hl[y - offsetY][x]*2 + 127);
+					result[y][x] = Math.round(hl[y - offsetY][x] * 2 + 127);
 				}
 				// HH unten rechts
 				if(x > newWidth / 2 && y > newHeight / 2 && x < newWidth && y < newHeight){
-					result[y][x] = Math.round(hh[y - offsetY][x - offsetX]*2 + 127);
+					result[y][x] = Math.round(hh[y - offsetY][x - offsetX] * 2 + 127);
 				}
 			}
 		}
