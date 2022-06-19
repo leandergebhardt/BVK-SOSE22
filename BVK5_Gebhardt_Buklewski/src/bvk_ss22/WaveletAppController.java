@@ -125,12 +125,10 @@ public class WaveletAppController {
 		kValue.setText(""+ k +"");
 		// TODO: Perform kaskade loop depending on value
 		waveletImage = Wavelet.testConverterBegin(greyScaleImage);
-		/*for(int i = 1; i <= k; i++){
-			waveletImage = Wavelet.kaskade(waveletImage, i);
-		}
-		 */
-		waveletImage = Wavelet.kaskade(waveletImage, 3);
+		waveletImage = Wavelet.kaskade(greyScaleImage, k);
 		waveletImage.setToView(processedImageView);
+
+		//recontructedImage = Wavelet.rekonstruct(waveletImage);
 	}
 
 	private void setKSlider(int M) {

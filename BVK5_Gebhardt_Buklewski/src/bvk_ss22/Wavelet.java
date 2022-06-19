@@ -15,17 +15,27 @@ public class Wavelet {
 
 	public static RasterImage kaskade(RasterImage input, int kaskades){
 
-		double[][] inputArray = convertImageTo2DArray(input);
 		double[][] fittedInputArray;
 		RasterImage resultImage = null;
 
-		for(int i = 1; i <= kaskades; i++){
-			fittedInputArray = fitArrayToKaskade(inputArray, i);
+		if(kaskades == 1){
+			resultImage = testConverterBegin(input);
+		}
+		if(kaskades == 0){
+			resultImage = input;
+		}
+		else {
+			RasterImage firstKaskade = testConverterBegin(input);
+			double[][] inputArray = convertImageTo2DArray(firstKaskade);
 
-			RasterImage secondKaskade = testConverter(fittedInputArray, i);
-			double[][] kaskadeArray = convertImageTo2DArray(secondKaskade);
-			// Combine kaskades
-			resultImage = combineKaskades(inputArray, kaskadeArray, i);
+			for (int i = 1; i < kaskades; i++) {
+				fittedInputArray = fitArrayToKaskade(inputArray, i);
+
+				RasterImage secondKaskade = testConverter(fittedInputArray, i);
+				double[][] kaskadeArray = convertImageTo2DArray(secondKaskade);
+				// Combine kaskades
+				resultImage = combineKaskades(inputArray, kaskadeArray, i);
+			}
 		}
 		
 		return resultImage;
@@ -52,179 +62,20 @@ public class Wavelet {
 		return result;
 	}
 
-	public static double[][] lowPassHorizontal (double[][] image){
-		double[] h0 = new double[] {-1.0, 2.0, 6.0, 2.0, -1.0};
-		double[][] resultImage = new double[image.length][image[0].length];
-			// durch x&y iterieren und h0 als filter anwenden; Randbehandlung: spiegeln
-			for(int y = 0; y < image.length; y++) {
-				for (int x = 0; x < image[0].length; x++) {
-					if (x % 2 == 0){
-					//System.out.println("pixelvalue before: " + image[y][x]);
-					//filter anwenden
-					int count = 0;
-					double value = 0;
-
-					for (int f = -2; f <= 2; f++) {
-						int i = f;
-						if (x + i < 0) {
-							i = i * (-1);
-						}
-						if (x + i >= image[0].length) {
-							i = i * (-1);
-						}
-
-						value += image[y][x + i] * h0[count];
-
-						count++;
-					}
-
-					value = value / 8.0;
-
-					//System.out.println(value);
-
-					resultImage[y][x/2] = value;
-				}
-			}
-			}
-
-		return resultImage;
-	}
-
-	public static double[][] lowPassVertical (double[][] image){
-		double[] h0 = new double[] {-1.0, 2.0, 6.0, 2.0, -1.0};
-		double[][] resultImage = new double[image.length][image[0].length];
-		// durch x&y iterieren und h0 als filter anwenden; Randbehandlung: spiegeln
-		for(int y = 0; y < image.length; y++) {
-			for (int x = 0; x < image[0].length; x++) {
-				if (y % 2 == 0){
-					//System.out.println("pixelvalue before: " + image[y][x]);
-					//filter anwenden
-					int count = 0;
-					double value = 0;
-
-					for (int f = -2; f <= 2; f++) {
-						int i = f;
-						if (y + i < 0) {
-							i = i * (-1);
-						}
-						if (y + i >= image.length) {
-							i = i * (-1);
-						}
-
-						value += image[y + i][x] * h0[count];
-
-						count++;
-					}
-
-					value = value / 8.0;
-
-					//System.out.println(value);
-
-					resultImage[y/2][x] = value;
-				}
-			}
-		}
-
-		return resultImage;
-	}
-
-	public static double[][] highPassHorizontal(double[][] image){
-		double[] h1 = new double[] {-1.0, 2.0, -1.0};
-		double[][] resultImage = new double[image.length][image[0].length];
-		// durch x&y iterieren und h0 als filter anwenden; Randbehandlung: spiegeln
-		for(int y = 0; y < image.length; y++){
-			for(int x = 0; x < image[0].length; x++){
-				if (x % 2 == 0) {
-					//System.out.println("pixelvalue before: " + image[y][x]);
-					//filter anwenden
-					int count = 0;
-					double value = 0;
-
-					for (int f = -1; f <= 1; f++) {
-						int i = f;
-						if (x + i < 0) {
-							i = i * (-1);
-						}
-						if (x + i >= image[0].length) {
-							i = i * (-1);
-						}
-
-						value += image[y][x + i] * h1[count];
-
-						count++;
-					}
-
-					value = value / 2.0;
-
-					//value += 127;
-
-					//System.out.println(value);
-
-
-					resultImage[y][x/2] = value;
-				}
-			}
-		}
-
-		return resultImage;
-
-	}
-
-	public static double[][] highPassVertical(double[][] image){
-		double[] h1 = new double[] {-1.0, 2.0, -1.0};
-		double[][] resultImage = new double[image.length][image[0].length];
-		// durch x&y iterieren und h0 als filter anwenden; Randbehandlung: spiegeln
-		for(int y = 0; y < image.length; y++){
-			for(int x = 0; x < image[0].length; x++){
-				if (y % 2 == 0) {
-					//System.out.println("pixelvalue before: " + image[y][x]);
-					//filter anwenden
-					int count = 0;
-					double value = 0;
-
-					for (int f = -1; f <= 1; f++) {
-						int i = f;
-						if (y + i < 0) {
-							i = i * (-1);
-						}
-						if (y + i >= image.length) {
-							i = i * (-1);
-						}
-
-						value += image[y + i][x] * h1[count];
-
-						count++;
-					}
-
-					value = value / 2.0;
-
-
-					//System.out.println(value);
-
-
-					resultImage[y/2][x] = value;
-				}
-			}
-		}
-
-		return resultImage;
-
-	}
-
 	public static RasterImage testConverterBegin(RasterImage input){
 		double[][] source = convertImageTo2DArray(input);
 
-		HL = highPassHorizontal(source);
-		HL = lowPassVertical(HL);
+		HL = Filter.highPassHorizontal(source);
+		HL = Filter.lowPassVertical(HL);
 
-		LH = lowPassHorizontal(source);
-		LH = highPassVertical(LH);
+		LH = Filter.lowPassHorizontal(source);
+		LH = Filter.highPassVertical(LH);
 
-		LL = lowPassHorizontal(source);
-		LL = lowPassVertical(LL);
+		LL = Filter.lowPassHorizontal(source);
+		LL = Filter.lowPassVertical(LL);
 
-		HH = highPassHorizontal(source);
-		HH = highPassVertical(HH);
+		HH = Filter.highPassHorizontal(source);
+		HH = Filter.highPassVertical(HH);
 
 		// Bilder zuschneiden
 		HL = fitArray(HL);
@@ -237,17 +88,17 @@ public class Wavelet {
 	}
 
 	public static RasterImage testConverter(double[][] input, int i){
-		double[][] HL = highPassHorizontal(input);
-		HL = lowPassVertical(HL);
+		double[][] HL = Filter.highPassHorizontal(input);
+		HL = Filter.lowPassVertical(HL);
 
-		double[][] LH = lowPassHorizontal(input);
-		LH = highPassVertical(LH);
+		double[][] LH = Filter.lowPassHorizontal(input);
+		LH = Filter.highPassVertical(LH);
 
-		double[][] LL = lowPassHorizontal(input);
-		LL = lowPassVertical(LL);
+		double[][] LL = Filter.lowPassHorizontal(input);
+		LL = Filter.lowPassVertical(LL);
 
-		double[][] HH = highPassHorizontal(input);
-		HH = highPassVertical(HH);
+		double[][] HH = Filter.highPassHorizontal(input);
+		HH = Filter.highPassVertical(HH);
 
 		// Bilder zuschneiden
 		HL = fitArray(HL);
@@ -394,4 +245,8 @@ public class Wavelet {
 		return result;
 	}
 
+	/*public static RasterImage rekonstruct(RasterImage waveletImage) {
+	}
+
+	 */
 }
