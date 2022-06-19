@@ -128,7 +128,8 @@ public class WaveletAppController {
 		waveletImage = Wavelet.kaskade(greyScaleImage, k);
 		waveletImage.setToView(processedImageView);
 
-		//recontructedImage = Wavelet.rekonstruct(waveletImage);
+		recontructedImage = Wavelet.rekonstruct(waveletImage);
+		recontructedImage.setToView(decodedImageView);
 	}
 
 	private void setKSlider(int M) {

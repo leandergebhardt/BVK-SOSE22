@@ -48,7 +48,7 @@ public class Wavelet {
 		//int halfWidth = result.width / 2;
 		//int halfHeight = result.height / 2;
 
-		System.out.println("half Widht = " + halfWidth + " halfHeight = " + halfHeight);
+		//System.out.println("half Widht = " + halfWidth + " halfHeight = " + halfHeight);
 
 		for(int y = 0; y < result.height; y++) {
 			for (int x = 0; x < result.width; x++) {
@@ -147,9 +147,9 @@ public class Wavelet {
 		int newWidth = ll[0].length * 2;
 		double[][] result = new double[newHeight][newWidth];
 
-		System.out.println(i + "nd Kaskade");
-		System.out.println("Kaskade height: " + newHeight +  " Kaskade width: " + newWidth);
-		System.out.println("LL height: " + ll.length +  " LL width: " + ll[0].length);
+		//System.out.println(i + "nd Kaskade");
+		//System.out.println("Kaskade height: " + newHeight +  " Kaskade width: " + newWidth);
+		//System.out.println("LL height: " + ll.length +  " LL width: " + ll[0].length);
 
 		int offsetY = ll.length;
 		int offsetX = ll[0].length;
@@ -211,7 +211,7 @@ public class Wavelet {
 		int newWidth = (int) (input[0].length / Math.pow(2, i)) * 2;
 		int newHeight = (int) (input.length / Math.pow(2, i)) * 2;
 
-		System.out.println("kaskade height: " + newHeight + " kaskade width: " + newWidth);
+		//System.out.println("kaskade height: " + newHeight + " kaskade width: " + newWidth);
 
 		double[][] fittedArray = new double[newHeight][newWidth];
 
@@ -245,8 +245,51 @@ public class Wavelet {
 		return result;
 	}
 
-	/*public static RasterImage rekonstruct(RasterImage waveletImage) {
+	public static RasterImage cut(double[][] input){
+		int height = input.length;
+		int width = input[0].length;
+
+		double[][] ll = new double[height / 2][width / 2];
+		double[][] hh = new double[height / 2][width / 2];
+		double[][] hl = new double[height / 2][width / 2];
+		double[][] lh = new double[height / 2][width / 2];
+
+		int offsetX = width / 2;
+		int offsetY = height / 2;
+
+		RasterImage result = null;
+
+		for(int y = 0; y < height; y++) {
+			for (int x = 0; x < width; x++) {
+				// LL Pass oben links
+				if(x < offsetY && y < offsetX && x < width && y < height){
+					ll[y][x] = input[y][x];
+				}
+				// LH oben rechts
+				if(x > offsetX && y < offsetY && x < width && y < height){
+					lh[y][x] = input[y][x -offsetX] / 2 - 127;
+				}
+				// HL unten links
+				if(x < offsetX && y > offsetY && x < width && y < height){
+					hl[y][x] = input[y - offsetY][x] / 2 - 127;
+				}
+				// HH unten rechts
+				if(x > offsetX && y > offsetY && x < width && y < height){
+					hh[y][x] = input[y - offsetY][x - offsetX] / 2 - 127;
+				}
+			}
+		}
+
+		return result;
 	}
 
-	 */
+	public static RasterImage rekonstruct(RasterImage waveletImage) {
+		RasterImage resultImage = new RasterImage(waveletImage.width, waveletImage.height);
+
+		double[][]inputArray = convertImageTo2DArray(waveletImage);
+		RasterImage result = cut(inputArray);
+
+		return resultImage;
+	}
+
 }
